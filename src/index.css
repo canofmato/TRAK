@@ -1,9 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  background-color: #D9D9D9;
+@theme {
+  --font-sans: "Roboto", sans-serif;
+
+  --text-logo: 160px;
+  --text-main-hero: 96px;
+  --text-nav: 40px;
+  --text-36: 36px;
+  --text-32: 32px;
+  --text-24: 24px;
+  --text-20: 20px;
+  --text-16: 16px;
+  --text-14: 14px;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --color-primary: #D7E8F8;
+  --color-rose: #FADAE5;
+  --color-line: #D4EBDB;
+  --color-amber: #FFF1CE;
+  --color-slate: #7B7B7B;
+
+  --color-black: #1E1E1E;
+  --color-gray-100: #ECECEC;
+  --color-gray-200: #919191;
+  --color-gray-300: #7B7B7B;
+  --color-gray-400: #3C3C3C;
+  --color-white: #fff;
+
+  --color-border-light: var(--color-gray-200);
+  --color-border-dark: var(--color-gray-300);
 }
 
-p {
-  color: blue;
+:root {
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 100;
+  font-optical-sizing: auto;
+  background-color: #D9D9D9;
+  color: var(--color-black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button, input, optgroup, select, textarea {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+button:focus {
+  outline: none;
 }
