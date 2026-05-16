@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@ const CARDS: Card[] = [
     title: "여행을\n데이터로.",
     body: "SNS 타임라인에 묻히는 기억 말고,\n내가 직접 꺼내볼 수 있는 아카이브.",
     accent: "var(--color-amber)",
-    textColor: "#1a1a1a",
+    textColor: "var(--color-black)",
     tiltDeg: -4,
     tag: "PRIVATE ARCHIVE",
   },
@@ -34,8 +34,8 @@ const CARDS: Card[] = [
     label: "02 — STRUCTURE",
     title: "Trip →\nFolder →\nPhoto.",
     body: "여행 단위로 독립된 공간.\n폴더로 순간을 분류하고\n사진마다 감정을 기록하세요.",
-    accent: "#1e1e1e",
-    textColor: "#f0ede8",
+    accent: "var(--color-black)",
+    textColor: "var(--color-gray-100)",
     tiltDeg: 3,
     tag: "ORGANIZED",
   },
@@ -45,7 +45,7 @@ const CARDS: Card[] = [
     title: "발자취를\n지도 위에.",
     body: "다녀온 모든 여행지가\n지도 위 하나의 점으로 남습니다.\n당신만의 세계 지도.",
     accent: "var(--color-lime)",
-    textColor: "#1a1a1a",
+    textColor: "var(--color-black)",
     tiltDeg: -2,
     tag: "VISUAL TRAIL",
   },
@@ -55,7 +55,7 @@ const CARDS: Card[] = [
     title: "오직\n나만의\n기록.",
     body: "좋아요도, 팔로워도 없습니다.\n보여주기 위한 게 아닌\n나를 위한 디지털 일기장.",
     accent: "var(--color-rose)",
-    textColor: "#1a1a1a",
+    textColor: "var(--color-black)",
     tiltDeg: 2,
     tag: "NO AUDIENCE",
   },
@@ -69,6 +69,8 @@ const CARD_H = 380;
 const ENV_W = 340;
 const ENV_H = 220;
 
+const FOOTER_LINKS = ["TERMS", "BLOG", "CONTACT", "©2026 TRAK"] as const;
+
 // ─── Single Card ─────────────────────────────────────────────────────────────
 
 function ArchiveCard({
@@ -80,7 +82,7 @@ function ArchiveCard({
   state: "hidden" | "rising" | "shown" | "gone";
   riseProgress: number;
 }) {
-  const isDark = card.accent === "#1e1e1e";
+  const isDark = card.accent === "var(--color-black)";
 
   let translateY = 0;
   let translateX = 0;
@@ -328,33 +330,44 @@ export default function LandingPage() {
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Animation math
-  const pxPerCard = (SCROLL_PER_CARD_VH / 100) * viewH;
-  const animStart = viewH * 0.12;
-  const animPx = Math.max(0, scrollPx - animStart);
-  const rawCardIndex = animPx / pxPerCard;
-  const clampedRaw = Math.min(rawCardIndex, CARDS.length - 0.001);
-  const activeCardIndex = Math.floor(clampedRaw);
-  const riseProgress = Math.min(1, clampedRaw - activeCardIndex);
+  const {
+    activeCardIndex,
+    riseProgress,
+    heroOpacity,
+    sceneMarginLeft,
+    outroProgress,
+    sceneTranslateY,
+    sceneOpacity,
+    totalScrollH,
+  } = useMemo(() => {
+    const pxPerCard = (SCROLL_PER_CARD_VH / 100) * viewH;
+    const animStart = viewH * 0.12;
+    const animPx = Math.max(0, scrollPx - animStart);
+    const rawCardIndex = animPx / pxPerCard;
+    const clampedRaw = Math.min(rawCardIndex, CARDS.length - 0.001);
+    const activeCardIndex = Math.floor(clampedRaw);
+    const riseProgress = Math.min(1, clampedRaw - activeCardIndex);
 
-  // Hero fade
-  const heroOpacity = heroIn ? Math.max(0, 1 - scrollPx / (viewH * 0.2)) : 0;
+    const heroOpacity = heroIn ? Math.max(0, 1 - scrollPx / (viewH * 0.2)) : 0;
+    const sceneMarginLeft = heroOpacity > 0.05 ? 110 : 0;
 
-  // Scene center shift: once hero fades, envelope centers
-  const sceneMarginLeft = heroOpacity > 0.05 ? 110 : 0;
-
-  // Outro: 카드 다 나온 후 씬 전체가 위로 올라가며 사라짐
-  const outroStart = animStart + CARDS.length * pxPerCard;
-  const outroDuration = viewH * 0.3;
-  const outroProgress = Math.max(0, Math.min(1, (scrollPx - outroStart) / outroDuration));
-  const outroEased = outroProgress < 0.5
-    ? 2 * outroProgress * outroProgress
-    : 1 - Math.pow(-2 * outroProgress + 2, 2) / 2; // easeInOutQuad
-
-  const sceneTranslateY = outroEased * -viewH * 0.35;
-  const sceneOpacity = 1 - outroEased;
-
-  const totalScrollH = animStart + CARDS.length * pxPerCard + outroDuration;
+    const outroStart = animStart + CARDS.length * pxPerCard;
+    const outroDuration = viewH * 0.3;
+    const outroProgress = Math.max(0, Math.min(1, (scrollPx - outroStart) / outroDuration));
+    const outroEased = outroProgress < 0.5
+      ? 2 * outroProgress * outroProgress
+      : 1 - Math.pow(-2 * outroProgress + 2, 2) / 2;
+    return {
+      activeCardIndex,
+      riseProgress,
+      heroOpacity,
+      sceneMarginLeft,
+      outroProgress,
+      sceneTranslateY: outroEased * -viewH * 0.35,
+      sceneOpacity: 1 - outroEased,
+      totalScrollH: animStart + CARDS.length * pxPerCard + outroDuration,
+    };
+  }, [scrollPx, viewH, heroIn]);
 
   return (
     <div
@@ -641,7 +654,7 @@ export default function LandingPage() {
             fontWeight: 900,
             lineHeight: 1.1,
             letterSpacing: "-0.02em",
-            color: "#fff",
+            color: "var(--color-white)",
             fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
             marginBottom: 20,
           }}
@@ -669,7 +682,7 @@ export default function LandingPage() {
           href="/signup"
           style={{
             backgroundColor: "var(--color-primary)",
-            color: "#1a1a1a",
+            color: "var(--color-black)",
             borderRadius: 999,
             padding: "14px 40px",
             fontSize: 13,
@@ -691,7 +704,7 @@ export default function LandingPage() {
             gap: 32,
           }}
         >
-          {["TERMS", "BLOG", "CONTACT", "©2026 TRAK"].map((item) => (
+          {FOOTER_LINKS.map((item) => (
             <span
               key={item}
               style={{
