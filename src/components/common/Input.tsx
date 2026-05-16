@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from "react";
+import React, { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import clsx from 'clsx';
 import { twMerge } from "tailwind-merge";
 import { FieldErrors, FieldValues, UseFormRegisterReturn} from 'react-hook-form';
@@ -7,7 +7,7 @@ import { LuEye as IconEyeOpen, LuEyeClosed as IconEyeClosed } from "react-icons/
 const VARIANTS = {
   filled: "bg-gray-200/20 text-16 focus:bg-white",
   outlined: "bg-white text-20",
-};
+} as const;
 
 const SIZES =  {
   lg: "w-[600px] h-[60px]",
@@ -16,22 +16,29 @@ const SIZES =  {
   hashtag: "w-[420px] h-[60px]",
   desLg: "w-[750px] h-[250px] p-5",
   desMd: "w-[700px] h-[215px] p-5",
-}
+} as const;
 
 type TouchedFieldsType<TFieldValues extends FieldValues> = {
   [K in keyof TFieldValues]?: boolean;
 }
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement & HTMLTextAreaElement> {
+type CommonProps = {
   label?: string;
   variant?: keyof typeof VARIANTS;
   sizeVariant?: keyof typeof SIZES;
-  isTextArea?: boolean;
   name: string;
   register?: UseFormRegisterReturn;
   errors?: FieldErrors;
   touchFields?: TouchedFieldsType<FieldValues>
+  className?: string;
+  id?: string;
+  placeholder?: string;
 }
+
+// isTextArea 값에 따라 허용 속성을 다르게 분류
+type InputProps = 
+  | ({ isTextArea: true} & CommonProps & TextareaHTMLAttributes<HTMLTextAreaElement>)
+  | ({ isTextArea?: false} & CommonProps & InputHTMLAttributes<HTMLInputElement>);
 
 export default function Input({
   variant = 'outlined',
@@ -40,7 +47,6 @@ export default function Input({
   label,
   className,
   id,
-  type,
   placeholder,
   name,
   register,
@@ -53,6 +59,8 @@ export default function Input({
   const errorMessage = errors?.[name]?.message as string | undefined;
   const hasError = !!errorMessage && touchFields?.[name];
 
+  // isTextArea가 false일 때만 type이 존재함
+  const type = !isTextArea ? (rest as InputHTMLAttributes<HTMLInputElement>).type : undefined;
   const isPasswordType = type === 'password';
   const IconEye = showPassword ? IconEyeOpen : IconEyeClosed;
 
@@ -72,8 +80,6 @@ export default function Input({
 
   const errorClasses = clsx('border-red bg-error/20');
 
-  const Component = isTextArea ? 'textarea' : 'input';
-
   return (
     <div className={twMerge('flex flex-col gap-2 transition-all', className)}>
       {label && (
@@ -82,26 +88,37 @@ export default function Input({
         </label>
       )}
       <div className="relative w-full">
-        <Component
-          id={id || name}
-          // textarea일때는 type을 아예 제외
-          {...(!isTextArea && {type: isPasswordType && showPassword ? 'text' : type})}
-          placeholder={placeholder}
-          className={twMerge(baseStyle, hasError && errorClasses)}
-          {...register}
-          {...rest }
-        />
+        {isTextArea ? (
+          <textarea
+            id={id ?? name}
+            placeholder={placeholder}
+            className={twMerge(baseStyle, hasError && errorClasses)}
+            {...register}
+            {...(rest as TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          />
+        ) : (
+          <input
+            id={id ?? name}
+            type={isPasswordType && showPassword ? "text" : (type ?? "text")}
+            placeholder={placeholder}
+            className={twMerge(baseStyle, hasError && errorClasses)}
+            {...register}
+            {...(rest as InputHTMLAttributes<HTMLInputElement>)}
+          />
+        )}
 
         {!isTextArea && isPasswordType && (
           <span
             className="absolute right-5 top-1/2 -translate-y-1/2 cursor-pointer"
             onClick={togglePasswordVisibility}
+            role="button"
+            aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
           >
             <IconEye size={20} color="var(--color-gray-200)"/>
           </span>
         )}
       </div>
-      {hasError && <p className="text-12 text-error">{errorMessage}</p>}
+      {hasError && <p className="text-12 text-error" role="alert">{errorMessage}</p>}
     </div>
   )
 }
