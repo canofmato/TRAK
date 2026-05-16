@@ -6,13 +6,13 @@
 
   --text-logo: 160px;
   --text-main-hero: 96px;
+  --text-nav: 40px;
   --text-36: 36px;
   --text-32: 32px;
   --text-24: 24px;
   --text-20: 20px;
   --text-16: 16px;
   --text-14: 14px;
-  --text-12: 12px;
 
   --font-weight-light: 300;
   --font-weight-regular: 400;
@@ -25,7 +25,6 @@
   --color-lime: #D4EBDB;
   --color-amber: #FFF1CE;
   --color-slate: #7B7B7B;
-  --color-error: #FF383C;
 
   --color-black: #1E1E1E;
   --color-gray-100: #ECECEC;
@@ -36,7 +35,7 @@
 
   --color-border-light: var(--color-gray-200);
   --color-border-dark: var(--color-gray-300);
-  --color-border-red: "var(--color-error);
+  --color-border-red: "var(--color-error)";
 }
 
 @layer base {
