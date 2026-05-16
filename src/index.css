@@ -34,6 +34,7 @@
 
   --color-border-light: var(--color-gray-200);
   --color-border-dark: var(--color-gray-300);
+  --color-border-red: "var(--color-error)";
 }
 
 :root {
