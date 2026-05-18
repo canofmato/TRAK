@@ -13,7 +13,8 @@
   --text-20: 20px;
   --text-16: 16px;
   --text-14: 14px;
-
+  --text-12: 12px;
+  
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -26,6 +27,7 @@
   --color-amber: #FFF1CE;
   --color-slate: #7B7B7B;
   --color-error: #FF383C;
+  --color-blue: #5BB1E0;
 
   --color-black: #1E1E1E;
   --color-gray-100: #ECECEC;
@@ -36,6 +38,7 @@
 
   --color-border-light: var(--color-gray-200);
   --color-border-dark: var(--color-gray-300);
+  --color-border-blue: var(--color-blue);
   --color-border-red: "var(--color-error)";
 }
 
