@@ -6,7 +6,7 @@
 
   --text-logo: 160px;
   --text-main-hero: 96px;
-  --text-nav: 40px;
+  --text-40: 40px;
   --text-36: 36px;
   --text-32: 32px;
   --text-24: 24px;
@@ -36,10 +36,11 @@
   --color-gray-400: #3C3C3C;
   --color-white: #fff;
 
-  --color-border-light: var(--color-gray-200);
-  --color-border-dark: var(--color-gray-300);
-  --color-border-blue: var(--color-blue);
-  --color-border-red: "var(--color-error)";
+  /* border 용 */
+  --color-light: var(--color-gray-200);
+  --color-dark: var(--color-gray-300);
+  --color-darker: var(--color-gray-400);
+  --color-red: "var(--color-error)";
 }
 
 @layer base {
