@@ -36,10 +36,11 @@
   --color-gray-400: #3C3C3C;
   --color-white: #fff;
 
-  --color-border-light: var(--color-gray-200);
-  --color-border-dark: var(--color-gray-300);
-  --color-border-blue: var(--color-blue);
-  --color-border-red: "var(--color-error)";
+  /* border 용 */
+  --color-light: var(--color-gray-200);
+  --color-dark: var(--color-gray-300);
+  --color-darker: var(--color-gray-400);
+  --color-red: "var(--color-error)";
 }
 
 @layer base {

@@ -12,11 +12,11 @@ function isLightColor(hex:string): boolean {
   return (r * 299 + g * 587 + b * 114) / 1000 > 180;
 }
 
-function createCustomColor(hex: string, index: number): TrakColor {
+function createCustomColor(hex: string): TrakColor {
   return {
-    id: `custon-${index}-${hex.slice(1)}`,
-    label: "Custon",
-    bgClass: `bg-[${hex}]`,
+    id: `custom-${hex.slice(1)}`,
+    label: "Custom",
+    bgClass: "",
     hex,
   };
 };
@@ -27,8 +27,6 @@ interface BaseProps {
   value?: string;
   onChange?: (color: TrakColor) => void;
   allowCustom?: boolean;
-  customColors?: TrakColor[];
-  onCustomColorsChange?: (color: TrakColor[]) => void;
 }
 
 interface StaticProps extends BaseProps {
@@ -48,56 +46,37 @@ export function ColorPalette(props: ColorPaletteProps) {
     value,
     onChange,
     allowCustom = true,
-    customColors: externalCustomColors,
-    onCustomColorsChange,
   } = props;
+  // 기본 제공 색상 중에 현재 value가 있는지 확인
+  const defaultColor = TRAK_COLORS.find((c) => c.hex.toLowerCase() === value?.toLowerCase());
+  // 없는데 value가 존재한다면 사용자가 지정한 커스텀 색상으로 간주
+  const selectedColor = defaultColor ?? (value ? createCustomColor(value) : null);
 
-  const [internalCustomColors, setInternalCustomColors] = useState<TrakColor[]>([]);
-  const customColors = externalCustomColors ?? internalCustomColors;
-
-  const handleCustomColorsChange = useCallback(
-    (colors: TrakColor[]) => {
-      if (onCustomColorsChange) {
-        onCustomColorsChange(colors);
-      } else {
-        setInternalCustomColors(colors);
-      }
-    },
-    [onCustomColorsChange]
-  );
-
-  const allColors = [...TRAK_COLORS, ...customColors];
-  const selectedColor = allColors.find((c) => c.hex === value) ?? null;
-
-  const handleAddCustomColor = useCallback(
+  const handleCustomColorChange = useCallback(
     (hex: string) => {
-      if (allColors.some((c) => c.hex.toLowerCase() === hex.toLowerCase())) return;
-      const newColor = createCustomColor(hex, customColors.length);
-      handleCustomColorsChange([...customColors, newColor]);
+      const newColor = createCustomColor(hex);
       onChange?.(newColor);
     },
-    [allColors, customColors, handleCustomColorsChange, onChange]
+    [onChange]
   );
 
   if (props.mode === "static") {
     return (
       <StaticPalette
-        colors={allColors}
         selectedColor={selectedColor}
         allowCustom={allowCustom}
         onChange={onChange}
-        onAddCustomColor={handleAddCustomColor}
+        onCustomColorChange={handleCustomColorChange}
       />
     );
   }
 
   return (
     <DropdownPalette
-      colors={allColors}
       selectedColor={selectedColor}
       allowCustom={allowCustom}
       onChange={onChange}
-      onAddCustomColor={handleAddCustomColor}
+      onCustomColorChange={handleCustomColorChange}
     />
   );
 }
@@ -118,16 +97,14 @@ function Swatch({ color, selected, onClick }: SwatchProps) {
     return <ColorSwatch color={color} selected={selected} onClick={onClick} />;
   }
 
-  const borderColor = selected ? "#6B6B6B" : isLightColor(color.hex) ? "#B0B0B0" : "#8A8A8A";
-
   return (
     <button
       type="button"
       aria-label={`커스텀 색상 선택${selected ? " (선택됨)" : ""}`}
       aria-pressed={selected}
-      style={{ backgroundColor: color.hex, borderColor, borderWidth: 2, borderStyle: "solid" }}
+      style={{ backgroundColor: color.hex }}
       className={`
-        size-12 rounded-full transition-all duration-150
+        w-[50px] h-[50px] rounded-full transition-all duration-150
         ${selected ? "scale-110 shadow-md" : "hover:scale-105"}
         focus-visible:outline-2 focus-visible:outline-offset-2
         focus-visible:outline-gray-200 cursor-pointer
@@ -139,19 +116,35 @@ function Swatch({ color, selected, onClick }: SwatchProps) {
 
 // ─── + 버튼 ───────────────────────────────────────────────────────────────────
 
-function AddColorButton({ onAdd }: { onAdd: (hex: string) => void }) {
+interface AddColorButtonProps {
+  customHex: string | null;
+  isSelected: boolean;
+  onColorChange: (hex: string) => void;
+}
+
+function AddColorButton({ customHex, isSelected, onColorChange }: AddColorButtonProps) {
+  const currentHex = customHex ?? "#7B7B7B";
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onColorChange(e.target.value);
+  };
+
+  const borderColor = isSelected ? "#7B7B7B" : isLightColor(currentHex) ? "#919191" : "#7B7B7B";
+  const textColor = isLightColor(currentHex) ? "text-gray-400" : "text-white";
+
   return (
     <div className="relative">
       <input
         type="color"
         aria-label="커스텀 색상 추가"
-        defaultValue="#ffffff"
+        value={currentHex}
         className="absolute inset-0 opacity-0 w-full h-full cursor-pointer rounded-full"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onAdd(e.target.value)}
+        onChange={handleChange}
       />
       <div
         aria-hidden="true"
-        className="w-[50px] h-[50px] rounded-full bg-gray-300 flex items-center justify-center pointer-events-none"
+        style={{ backgroundColor: currentHex, borderColor }}
+        className="w-[50px] h-[50px] rounded-full flex items-center justify-center pointer-events-none transition-colors duration-150 border-2"
       >
         <span className="text-white text-40 leading-none">+</span>
       </div>
@@ -162,23 +155,23 @@ function AddColorButton({ onAdd }: { onAdd: (hex: string) => void }) {
 // ─── Static ───────────────────────────────────────────────────────────────────
 
 interface StaticPaletteProps {
-  colors: TrakColor[];
   selectedColor: TrakColor | null;
   allowCustom: boolean;
   onChange?: (color: TrakColor) => void;
-  onAddCustomColor: (hex: string) => void;
+  onCustomColorChange: (hex: string) => void;
 }
 
 function StaticPalette({
-  colors,
   selectedColor,
   allowCustom,
   onChange,
-  onAddCustomColor,
+  onCustomColorChange,
 }: StaticPaletteProps) {
+  const isCustomSelected = !!(selectedColor && selectedColor.id.startsWith("custom-"));
+
   return (
     <div role="group" aria-label="색상 팔레트" className="flex items-center gap-3">
-      {colors.map((color) => (
+      {TRAK_COLORS.map((color) => (
         <Swatch
           key={color.id}
           color={color}
@@ -186,7 +179,13 @@ function StaticPalette({
           onClick={onChange}
         />
       ))}
-      {allowCustom && <AddColorButton onAdd={onAddCustomColor} />}
+      {allowCustom && (
+        <AddColorButton 
+          customHex={isCustomSelected ? selectedColor!.hex : null}
+          isSelected={isCustomSelected}
+          onColorChange={onCustomColorChange}
+        />
+      )}
     </div>
   );
 };
@@ -194,19 +193,17 @@ function StaticPalette({
 // ─── Dropdown ───────────────────────────────────────────────────────────────────
 
 interface DropdownPaletteProps {
-  colors: TrakColor[];
   selectedColor: TrakColor | null;
   allowCustom: boolean;
   onChange?: (color: TrakColor) => void;
-  onAddCustomColor: (hex: string) => void;
+  onCustomColorChange: (hex: string) => void;
 }
 
 function DropdownPalette({
-  colors,
   selectedColor,
   allowCustom,
   onChange,
-  onAddCustomColor,
+  onCustomColorChange,
 }: DropdownPaletteProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -236,13 +233,14 @@ function DropdownPalette({
     [onChange]
   );
 
-  const handleAddCustom = useCallback(
+  const handleCustomSelect = useCallback(
     (hex: string) => {
-      onAddCustomColor(hex);
+      onCustomColorChange(hex);
       setIsOpen(false);
     },
-    [onAddCustomColor]
+    [onCustomColorChange]
   );
+  const isCustomSelected = !!(selectedColor && selectedColor.id.startsWith("custom-"));
 
   return (
     <div ref={containerRef} className="relative inline-flex items-center">
@@ -258,7 +256,7 @@ function DropdownPalette({
           type="button"
           aria-label="색상 팔레트 열기"
           aria-expanded={isOpen}
-          className="w-[50px] h-[50px] rounded-full bg-gray-300 flex items-center justify-center
+          className="w-[50px] h-[50px] bg-gray-300 rounded-full flex items-center justify-center
             transition-transform duration-150 hover:scale-105 active:scale-95
             focus-visible:outline-2 focus-visible:outline-offset-2
             focus-visible:outline-gray-300 cursor-pointer"
@@ -282,7 +280,7 @@ function DropdownPalette({
           ${isOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-90 pointer-events-none"}
         `}
       >
-        {colors.map((color) => (
+        {TRAK_COLORS.map((color) => (
           <Swatch
             key={color.id}
             color={color}
@@ -290,7 +288,13 @@ function DropdownPalette({
             onClick={handleSelect}
           />
         ))}
-        {allowCustom && <AddColorButton onAdd={handleAddCustom} />}
+        {allowCustom && (
+          <AddColorButton
+            customHex={isCustomSelected ? selectedColor!.hex : null}
+            isSelected={isCustomSelected}
+            onColorChange={handleCustomSelect}
+          />
+        )}
       </div>
     </div>
   );

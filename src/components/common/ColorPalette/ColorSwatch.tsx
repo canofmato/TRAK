@@ -28,11 +28,11 @@ export function ColorSwatch({ color, selected = false, onClick}: ColorSwatchProp
         w-[50px] h-[50px] rounded-full ${color.bgClass}
         border-2 transition-all duration-150
         ${selected
-          ? "border-dark"
-          : "border-none hover:scale-105 hover:border-light"
+          ? "border-dark scale-110"
+          : "border-transparent hover:scale-105"
         }
         focus-visible:outline-2 focus-visible:outline-offset-2
-        focus-visible:outline-gray-300 cursor-pointer
+        focus-visible:outline-gray-200 cursor-pointer
         `}
       onClick={() => onClick?.(color)}
     />
