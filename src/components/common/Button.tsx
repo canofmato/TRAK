@@ -16,9 +16,12 @@ const SIZES = {
   ss: "w-[60px]",
 } as const;
 
+type ButtonVariant = keyof typeof VARIANTS;
+type ButtonSize = keyof typeof SIZES;
+
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: keyof typeof VARIANTS;
-  sizeVariant?: keyof typeof SIZES;
+  variant?: ButtonVariant;
+  sizeVariant?: ButtonSize;
   className?: string;
   children: React.ReactNode;
 }
