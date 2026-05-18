@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {},
  webpack(config) {
     // 기존 Next.js SVG 처리 룰 제거
     const fileLoaderRule = config.module.rules.find((rule: { test?: RegExp }) =>
