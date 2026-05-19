@@ -146,7 +146,7 @@ function AddColorButton({ customHex, isSelected, onColorChange }: AddColorButton
         style={{ backgroundColor: currentHex, borderColor }}
         className="w-[50px] h-[50px] rounded-full flex items-center justify-center pointer-events-none transition-colors duration-150 border-2"
       >
-        <span className="text-white text-40 leading-none">+</span>
+        <span className="text-white text-heading-lg leading-none">+</span>
       </div>
     </div>
   );
@@ -262,7 +262,7 @@ function DropdownPalette({
             focus-visible:outline-gray-300 cursor-pointer"
           onClick={() => setIsOpen((prev) => !prev)}
         >
-          <span aria-hidden="true" className="text-white text-40 leading-none">+</span>
+          <span aria-hidden="true" className="text-white text-heading-lg leading-none">+</span>
         </button>
       )}
 

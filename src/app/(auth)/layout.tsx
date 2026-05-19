@@ -8,13 +8,13 @@ export default function AuthLayout({
       <div className="flex flex-col w-full h-[300px] items-center justify-center bg-background lg:w-[700px] lg:h-screen lg:shrink-0">
         <div className="flex flex-col w-full gap-3 lg:gap-10 items-center justify-center ">
           <h1 className="font-archivo text-primary text-main-hero lg:text-logo">TRAK</h1>
-          <p className="font-roboto text-gray-200 text-center text-14 lg:text-16">
+          <p className="font-roboto text-gray-200 text-center text-base lg:text-body">
             새 계정을 만들고
             <br className="hidden lg:inline" />
             나만의 여행 아카이브를
             <br className="hidden lg:inline" />
             시작해보세요.</p>
-          <p className="font-roboto text-gray-200 text-center text-14 lg:text-16">
+          <p className="font-roboto text-gray-200 text-center text-base lg:text-body">
             무료로 무제한 여행을
             <br className="hidden lg:inline" />
             기록할 수 있어요.</p>

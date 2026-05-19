@@ -33,8 +33,8 @@ export default function SignupPage() {
     <div className="flex flex-col w-full font-roboto text-black justify-center gap-10">
       {/* 타이틀 */}
       <div className="flex flex-col items-start gap-1">
-        <h1 className="text-24 font-bold">회원가입</h1>
-        <p className="text-14 text-gray-200">새 계정을 만들어 여행을 기록하세요.</p>
+        <h1 className="text-subtitle-md font-bold">회원가입</h1>
+        <p className="text-base text-gray-200">새 계정을 만들어 여행을 기록하세요.</p>
       </div>
 
       {/* 사용자 입력폼 */}
@@ -80,7 +80,7 @@ export default function SignupPage() {
         <Input
           name="passwordCheck"
           type="password"          // 💡 type="password"를 주면 컴포넌트 내부 눈모양 아이콘이 켜집니다!
-          label="비밀번호 확인*"
+          label="비밀번호 확인 *"
           placeholder="비밀번호를 다시 입력해주세요."
           variant="filled"
           sizeVariant="lg"
@@ -113,8 +113,8 @@ export default function SignupPage() {
           <FcGoogle size={24} /> Google로 계속하기
         </Button>
         <div className="flex gap-2 items-center justify-center">
-          <p className="text-12 text-gray-200">이미 계정이 있으신가요?</p>
-          <a href="/login" className="text-16 font-semibold">로그인</a>
+          <p className="text-caption text-gray-200">이미 계정이 있으신가요?</p>
+          <a href="/login" className="text-body font-semibold">로그인</a>
         </div>
       </div>
 

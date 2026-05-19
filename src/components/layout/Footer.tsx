@@ -7,19 +7,19 @@ export function Footer() {
       <div className="flex gap-10 items-center">
         <Link
           href="/terms"
-          className="text-24 font-semibold text-black hover:text-gray-400 transition-colors"
+          className="text-subtitle-lg font-semibold text-black hover:text-gray-400 transition-colors"
         >
           TERMS
         </Link>
         <Link
           href="/blog"
-          className="text-24 font-semibold text-black hover:text-gray-400 transition-colors"
+          className="text-subtitle-lg font-semibold text-black hover:text-gray-400 transition-colors"
         >
           BLOG
         </Link>
         <Link
           href="/contact"
-          className="text-24 font-semibold text-black hover:text-gray-400 transition-colors"
+          className="text-subtitle-lg font-semibold text-black hover:text-gray-400 transition-colors"
         >
           CONTACT
         </Link>
@@ -32,7 +32,7 @@ export function Footer() {
         <Logo className="w-auto h-[50px]" />
       </Link>
 
-      <span className="text-20 text-black">
+      <span className="text-subtitle-md text-black">
         ©2026 canofmato. All rights reserved
       </span>
     </footer>
