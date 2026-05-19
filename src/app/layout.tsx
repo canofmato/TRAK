@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto, Noto_Sans_KR } from "next/font/google";
+import { Roboto, Noto_Sans_KR, Archivo_Black } from "next/font/google";
 import "./globals.css"
 
 const roboto = Roboto({
@@ -14,6 +14,12 @@ const notoIsansKr = Noto_Sans_KR({
   variable: "--font-noto",
 });
 
+const archivoBlack = Archivo_Black({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-archivo",
+})
+
 export const metadata: Metadata = {
   title: "TRAK",
   description: "TRAK- - Personal Travel Archive",
@@ -24,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${roboto.variable} ${notoIsansKr.variable}`}>
+    <html lang="ko" className={`${roboto.variable} ${notoIsansKr.variable} ${archivoBlack.variable} antialiased`}>
       {/* 한글은 Noto Sans를 기본으로, 영문/숫자는 Roboto를 우선 적용 */}
       <body className="font-roboto antialiased"> 
         {children}

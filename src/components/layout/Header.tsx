@@ -5,7 +5,7 @@ export function Header() {
     <header className="w-full h-[70px] px-[70px] py-6 flex items-center justify-between border-b border-darker">
       <Link
         href="/main"
-        className="text-32 font-semibold text-black hover:text-gray-400 transition-colors"
+        className="text-heading-sm font-semibold text-black hover:text-gray-400 transition-colors"
       >
         Home
       </Link>
@@ -13,14 +13,14 @@ export function Header() {
       <div className="flex items-center gap-[200px]">
         <Link
         href="/map"
-        className="text-32 font-semibold text-black hover:text-gray-400 transition-colors"
+        className="text-heading-sm font-semibold text-black hover:text-gray-400 transition-colors"
       >
         Map
       </Link>
 
       <Link
         href="/profile"
-        className="text-32 font-semibold text-black hover:text-gray-400 transition-colors"
+        className="text-heading-sm font-semibold text-black hover:text-gray-400 transition-colors"
       >
         Profile
       </Link>
