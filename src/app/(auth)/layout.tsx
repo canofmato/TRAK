@@ -24,7 +24,7 @@ export default function AuthLayout({
 
       {/* [폼 컨테이너 영역] */}
       <div className="relative z-10 flex flex-1 w-full h-[900px] items-center justify-center px-6 py-12 bg-white rounded-t-[50px] lg:h-screen lg:flex-1 lg:rounded-none lg:px-16 lg:p-0">
-        <div className="w-full max-w-[600px]">
+        <div className="w-full max-w-[500px]">
           {children}
         </div>
 

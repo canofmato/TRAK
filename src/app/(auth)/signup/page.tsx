@@ -67,8 +67,8 @@ export default function SignupPage() {
     <div className="flex flex-col w-full font-roboto text-black justify-center gap-10">
       {/* 타이틀 */}
       <div className="flex flex-col items-start gap-1">
-        <h1 className="text-subtitle-md font-bold">회원가입</h1>
-        <p className="text-base text-gray-200">새 계정을 만들어 여행을 기록하세요.</p>
+        <h1 className="text-subtitle-lg font-bold">회원가입</h1>
+        <p className="text-base text-gray-200">새 계정을 만들어 여행을 기록해보세요.</p>
       </div>
 
       {/* 사용자 입력폼 */}
@@ -113,7 +113,7 @@ export default function SignupPage() {
               message: "비밀번호는 최소 8자 이상이어야 합니다."
             },
             pattern: {
-              // 💡 영문, 숫자, 특수문자가 최소 1개 이상 포함되었는지 검사하는 정규식이야!
+              // 영문, 숫자, 특수문자가 최소 1개 이상 포함되었는지 검사
               value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
               message: "영문, 숫자, 특수문자를 포함하여 8자 이상 입력해주세요."
             }
@@ -124,14 +124,14 @@ export default function SignupPage() {
         {/* 비밀번호 확인 */}
         <Input
           name="passwordCheck"
-          type="password"          // 💡 type="password"를 주면 컴포넌트 내부 눈모양 아이콘이 켜집니다!
+          type="password"
           label="비밀번호 확인 *"
           placeholder="비밀번호를 다시 입력해주세요."
           variant="filled"
           sizeVariant="lg"
           register={register("passwordCheck", {
             required: "비밀번호를 다시 한 번 입력해주세요.",
-            validate: (value) => value === passwordValue || "비밀번호가 일치하지 않습니다." // 💡 실시간 일치 검증
+            validate: (value) => value === passwordValue || "비밀번호가 일치하지 않습니다."
           })}
           errors={errors}
         />
@@ -160,7 +160,7 @@ export default function SignupPage() {
         </Button>
         <div className="flex gap-2 items-center justify-center">
           <p className="text-caption text-gray-200">이미 계정이 있으신가요?</p>
-          <a href="/login" className="text-body font-semibold">로그인</a>
+          <a href="/login" className="text-base font-semibold">로그인</a>
         </div>
       </div>
     </div>
