@@ -5,15 +5,15 @@ import { FieldErrors, FieldValues, UseFormRegisterReturn} from 'react-hook-form'
 import { LuEye as IconEyeOpen, LuEyeClosed as IconEyeClosed } from "react-icons/lu";
 
 const VARIANTS = {
-  filled: "bg-gray-200/20 text-16 focus:bg-white",
-  outlined: "bg-white text-20",
+  filled: "bg-gray-200/20 text-14 focus:bg-white border border-none focus:border-light",
+  outlined: "bg-white text-14",
 } as const;
 
 const SIZES =  {
-  lg: "w-[600px] h-[60px]",
-  md: "w-[360px] h-[60px]",
-  sm: "w-[300px] h-[60px]",
-  hashtag: "w-[420px] h-[60px]",
+  lg: "w-[500px] h-[50px]",
+  md: "w-[360px] h-[50px]",
+  sm: "w-[300px] h-[50px]",
+  hashtag: "w-[420px] h-[50px]",
   desLg: "w-[750px] h-[250px] p-5",
   desMd: "w-[700px] h-[215px] p-5",
 } as const;
@@ -51,13 +51,12 @@ export default function Input({
   name,
   register,
   errors,
-  touchFields,
   ...rest
 }: InputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
   
   const errorMessage = errors?.[name]?.message as string | undefined;
-  const hasError = !!errorMessage && touchFields?.[name];
+  const hasError = !!errorMessage;
 
   // isTextArea가 false일 때만 type이 존재함
   const type = !isTextArea ? (rest as InputHTMLAttributes<HTMLInputElement>).type : undefined;
@@ -83,11 +82,11 @@ export default function Input({
   return (
     <div className={twMerge('flex flex-col gap-2 transition-all', className)}>
       {label && (
-        <label htmlFor={id || name } className="font-roboto text-16 text-start">
+        <label htmlFor={id || name } className="font-roboto text-12 text-start">
           {label}
         </label>
       )}
-      <div className="relative w-full">
+      <div className={twMerge("relative",  SIZES[sizeVariant])}>
         {isTextArea ? (
           <textarea
             id={id ?? name}

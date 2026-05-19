@@ -3,14 +3,14 @@ import { twMerge } from "tailwind-merge";
 import { ButtonHTMLAttributes } from "react";
 
 const VARIANTS = {
-  primary: "bg-primary text-20 text-gray-200 active:text-gray-400 active:border active:border-2 active:border-blue",
-  outlined: "bg-white text-gray-200 active:text-gray-400 border-light active:border-dark",
+  primary: "bg-primary text-gray-200 active:text-gray-400 active:border active:border-2 active:border-blue",
+  outlined: "bg-white text-gray-200 active:text-gray-400 border border-light active:border-dark",
   filled: "bg-gray-200 active:bg-gray-400 text-white",
   delete: "bg-white border border-red text-red"
 } as const;
 
 const SIZES = {
-  lg: "w-[600px]",
+  lg: "w-[500px]",
   md: "w-[470px]",
   sm: "w-[200px]",
   ss: "w-[60px]",
@@ -35,7 +35,7 @@ export default function Button({
 }: ButtonProps) {
 
   const baseStyle = twMerge(clsx(
-    'h-[60px] rounded-[10px] flex items-center justify-center transition-all',
+    'h-[50px] rounded-[10px] flex items-center justify-center transition-all',
     VARIANTS[variant],
     SIZES[sizeVariant],
   ), className)
