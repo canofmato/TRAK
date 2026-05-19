@@ -1,0 +1,34 @@
+export default function AuthLayout({
+  children,
+}: { children: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-h-screen w-full flex-col lg:flex-row bg-background lg:bg-white">
+      {/* Logo 및 ad 영역 */}
+      <div className="flex flex-col w-full h-[240px] items-center justify-center bg-background lg:w-[700px] lg:h-screen">
+        <div className="flex flex-col w-full gap-3 lg:gap-10 items-center justify-center ">
+          <h1 className="font-archivo text-primary text-main-hero lg:text-logo">TRAK</h1>
+          <p className="font-roboto text-gray-200 text-20 lg:text-24">
+            새 계정을 만들고
+            <br className="hidden lg:inline" />
+            나만의 여행 아카이브를
+            <br className="hidden lg:inline" />
+            시작해보세요.</p>
+          <p className="font-roboto text-gray-200 text-20 lg:text-24">
+            무료로 무제한 여행을
+            <br className="hidden lg:inline" />
+            기록할 수 있어요.</p>
+        </div>
+      </div>
+      
+
+      {/* [폼 컨테이너 영역] */}
+      <div className="relative z-10 -mt-16 flex flex-1 w-full h-[900px] items-center justify-center px-6 py-12 bg-white rounded-t-[50px] lg:h-screen lg:flex-1 lg:rounded-none">
+        <div className="w-full max-w-[600px]">
+          {children}
+        </div>
+
+      </div>
+    </div>
+  )
+}
