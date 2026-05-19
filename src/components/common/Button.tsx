@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 import { ButtonHTMLAttributes } from "react";
 
 const VARIANTS = {
-  primary: "bg-primary text-gray-200 active:text-gray-400 active:border active:border-2 active:border-blue",
-  outlined: "bg-white text-gray-200 active:text-gray-400 border border-light active:border-dark",
+  primary: "bg-primary text-base text-gray-200 active:text-gray-400 active:border active:border-2 active:border-blue",
+  outlined: "bg-white text-caption text-gray-200 active:text-gray-400 border border-light active:border-dark",
   filled: "bg-gray-200 active:bg-gray-400 text-white",
   delete: "bg-white border border-red text-red"
 } as const;

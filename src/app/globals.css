@@ -7,14 +7,14 @@
 
   --text-logo: 160px;
   --text-main-hero: 96px;
-  --text-40: 40px;
-  --text-36: 36px;
-  --text-32: 32px;
-  --text-24: 24px;
-  --text-20: 20px;
-  --text-16: 16px;
-  --text-14: 14px;
-  --text-12: 12px;
+  --text-heading-lg: 40px;
+  --text-heading-md: 36px;
+  --text-heading-sm: 32px;
+  --text-subtitle-lg: 24px;
+  --text-subtitle-md: 20px;
+  --text-body: 16px;
+  --text-base: 14px;
+  --text-caption: 12px;
   
   --font-weight-light: 300;
   --font-weight-regular: 400;
