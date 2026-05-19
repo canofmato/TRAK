@@ -69,7 +69,7 @@ export default function Input({
             id={id ?? name}
             type={isPasswordType && showPassword ? "text" : type}
             placeholder={placeholder}
-            className={twMerge(baseStyle, hasError && 'border-red bg-error/20')}
+            className={twMerge(baseStyle, hasError && 'border-red bg-red/20')}
             {...register}
             {...rest}
           />
