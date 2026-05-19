@@ -1,10 +1,11 @@
 'use client';
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Input from "@/components/common/Input";
 import { FcGoogle } from "react-icons/fc";
 import Button from "@/components/common/Button";
+import { supabase } from "@/lib/supabaseClient";
 
 interface SignupFormValues {
   nickname: string;
@@ -14,6 +15,9 @@ interface SignupFormValues {
 }
 
 export default function SignupPage() {
+  //회원가입 진행 중
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -23,11 +27,41 @@ export default function SignupPage() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<SignupFormValues> = (data) => {
-    console.log("회원가입 데이터:", data);
+  const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
+    setIsLoading(true);
+    
+    const { data: signUpData, error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        // 닉네임을 유저 메타데이터데 담아 보내면, 백엔드 트리거가 profiles 테이블에 자동으로 꽂아줌
+        data: {
+          full_name: data.nickname,
+        }
+      }
+    });
+    setIsLoading(false);
+
+    if (error) {
+      alert(`회원가입 실패... ❌ \n에러 내용: ${error.message}`);
+    } else {
+      alert("회원가입 요청 성공! 🎉 \n이메일 인증 링크가 발송되었습니다. (인프라 설정에 따라 바로 로그인될 수도 있어요!)");
+      console.log("가입 성공 데이터:", signUpData);
+    }
   };
 
   const passwordValue = watch("password");
+
+  //구글 로그인 버튼
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/main`,
+      },
+    });
+    if (error) alert(`구글 로그인 실패: ${error.message}`);
+  }
 
   return (
     <div className="flex flex-col w-full font-roboto text-black justify-center gap-10">
@@ -67,12 +101,23 @@ export default function SignupPage() {
         {/* 비밀번호 */}
         <Input
           name="password"
-          type="password"          // 💡 type="password"를 주면 컴포넌트 내부 눈모양 아이콘이 켜집니다!
+          type="password"
           label="비밀번호 *"
           placeholder="비밀번호를 입력해주세요."
           variant="filled"
           sizeVariant="lg"
-          register={register("password", { required: "특수문자 포함 8자 이상을 입력해주세요." })}
+          register={register("password", { 
+            required: "비밀번호를 입력해주세요.",
+            minLength: {
+              value: 8,
+              message: "비밀번호는 최소 8자 이상이어야 합니다."
+            },
+            pattern: {
+              // 💡 영문, 숫자, 특수문자가 최소 1개 이상 포함되었는지 검사하는 정규식이야!
+              value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+              message: "영문, 숫자, 특수문자를 포함하여 8자 이상 입력해주세요."
+            }
+          })}
           errors={errors}
         />
 
@@ -96,10 +141,10 @@ export default function SignupPage() {
           type="submit"
           variant="primary"
           sizeVariant="lg"
+          disabled={isLoading}
         >
           회원가입
         </Button>
-
       </form>
 
       {/* 기타 로그인 */}
@@ -108,7 +153,8 @@ export default function SignupPage() {
           type="button"
           variant="outlined"
           sizeVariant="lg"
-          onClick={() => console.log("구글 로그인 시도")}
+          onClick={handleGoogleLogin}
+          className="flex gap-2"
         >
           <FcGoogle size={24} /> Google로 계속하기
         </Button>
@@ -117,7 +163,6 @@ export default function SignupPage() {
           <a href="/login" className="text-body font-semibold">로그인</a>
         </div>
       </div>
-
     </div>
   )
 }
