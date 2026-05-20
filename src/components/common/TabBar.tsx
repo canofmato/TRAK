@@ -1,8 +1,8 @@
 'use client'
 
 import { useTabStore } from "@/store/tabStore";
-import { TripTab } from "@/types/trip"
-import { useRouter } from "next/router";
+import type { TripTab } from "@/types/trip"
+import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import Link from "next/link";
 
@@ -41,7 +41,7 @@ function TabItem({ tab, isActive }: TabItemProps) {
         aria-current={isActive ? 'page' : undefined}
         aria-label={`${tab.title} 여행 탭`}
         className="relative flex items-center cursor-pointer select-none
-                  transition-opacity hover:opacity-opacity-90 focus-visible:outline-none"
+                  transition-opacity hover:opacity-90 focus-visible:outline-none"
         style={{
           ...TAB_STYLES,
           backgroundColor: tab.color,
@@ -73,6 +73,7 @@ function DefaultTab() {
       <div
         aria-hidden="true"
         className="bg-white border border-gray-200"
+        style={TAB_STYLES}
       />
     </li>
   )
@@ -85,6 +86,7 @@ function MoreTab() {
         href="/profile"
         aria-label="전체 여행 목록 보기"
         className="flex items-center justify-center bg-gray-500 transition-opacity hover:opacity-90 focus-visible:outline-none"
+        style={TAB_STYLES}
       >
         <span className="text-subtitle-lg font-semibold text-white">
           More

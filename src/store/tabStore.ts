@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TripTab } from "@/types/trip";
+import type { TripTab } from "@/types/trip";
 import { persist } from "zustand/middleware";
 
 const MAX_TABS = 4;
