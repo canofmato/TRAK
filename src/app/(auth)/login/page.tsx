@@ -6,6 +6,7 @@ import Input from "@/components/common/Input";
 import { FcGoogle } from "react-icons/fc";
 import Button from "@/components/common/Button";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 
 interface LoginFormValues {
   email: string;
@@ -28,7 +29,8 @@ export default function LoginPage() {
     // 두 필드 모두 입력됐는지 감지
     const watchedFields = watch(["email", "password"]);
     const isComplete = watchedFields.every((v) => v && v.trim() !== "");
-
+    const router = useRouter();
+    
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
         setIsLoading(true);
         
@@ -42,7 +44,7 @@ export default function LoginPage() {
           alert(`로그인실패... ❌ \n에러 내용: ${error.message}`);
         } else {
           alert("로그인 성공! 🎉 \n환영합니다!");
-          console.log("로그인 성공 데이터:", loginData);
+          router.push("/main");
         }
       };
 
