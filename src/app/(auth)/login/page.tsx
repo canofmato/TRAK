@@ -19,10 +19,15 @@ export default function LoginPage() {
     const {
       register,
       handleSubmit,
+      watch,
       formState: { errors},
     } = useForm<LoginFormValues>({
       mode: "onChange",
     });
+
+    // 두 필드 모두 입력됐는지 감지
+    const watchedFields = watch(["email", "password"]);
+    const isComplete = watchedFields.every((v) => v && v.trim() !== "");
 
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
         setIsLoading(true);
@@ -65,7 +70,7 @@ export default function LoginPage() {
               {/* 이메일 */}
               <Input
                 name="email"
-                label="이메일 *"
+                label="이메일"
                 placeholder="이메일을 입력해주세요."
                 variant="filled"
                 sizeVariant="lg"
@@ -80,7 +85,7 @@ export default function LoginPage() {
               <Input
                 name="password"
                 type="password"
-                label="비밀번호 *"
+                label="비밀번호"
                 placeholder="비밀번호를 입력해주세요."
                 variant="filled"
                 sizeVariant="lg"
@@ -110,6 +115,7 @@ export default function LoginPage() {
                 variant="primary"
                 sizeVariant="lg"
                 disabled={isLoading}
+                isActive={isComplete}
               >
                 로그인
               </Button>
