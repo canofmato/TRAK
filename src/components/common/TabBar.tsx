@@ -113,7 +113,7 @@ export function TabBar() {
   const total = tabs.length + 1;
 
   return (
-    <nav aria-label="고정된 여행 탭">
+    <nav aria-label="고정된 여행 탭" style={{ clipPath: 'inset(-20px -20px 0px -20px)' }}>
       <ol className="flex items-end w-[1340px]">
         <DefaultTab index={0} total={total} />
         {tabs.map((tab, i) => (
