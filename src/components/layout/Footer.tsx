@@ -3,23 +3,23 @@ import Logo from "@/assets/icons/Logo.svg";
 
 export function Footer() {
   return (
-    <footer className="w-full h-[60px] px-[70px] flex items-center justify-between border-t border-darker">
+    <footer className="w-full h-[60px] px-[40px] lg:px-[70px] flex items-center justify-between border-t border-darker">
       <div className="flex gap-10 items-center">
         <Link
           href="/terms"
-          className="text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
+          className="text-body lg:text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
         >
           TERMS
         </Link>
         <Link
           href="/blog"
-          className="text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
+          className="text-body lg:text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
         >
           BLOG
         </Link>
         <Link
           href="/contact"
-          className="text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
+          className="text-body lg:text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
         >
           CONTACT
         </Link>
@@ -29,7 +29,7 @@ export function Footer() {
         <Logo className="h-[70px] aspect-square shrink-0"/>
       </Link>
 
-      <span className="text-body text-black">
+      <span className="text-caption lg:text-body text-black">
         ©2026 canofmato. All rights reserved
       </span>
     </footer>

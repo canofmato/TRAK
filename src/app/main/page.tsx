@@ -11,18 +11,18 @@ export default function MainPage() {
       <Header />
 
       {/* main */}
-      <main className="flex-1 flex flex-col py-[70px] items-center">
+      <main className="w-full flex-1 flex flex-col px-[40px] lg:px-[70px] py-[70px] items-center">
         {/* TabBar*/}
-        <div className="relative z-10">
+        <div className="w-full z-10">
           <TabBar />
         </div>
 
         {/* content */}
-        <section className="w-[1340px] h-[600px] flex items-center p-10 bg-white">
+        <section className="w-full h-[800px] lg:h-[600px] flex items-center p-10 bg-white">
           <div className="w-full h-full flex items-end justify-between p-4 border border-2 border-dashed border-dark">
             <div className="flex flex-col h-full items-start justify-between">
               <div className="flex flex-col items-start gap-5">
-                <h1 className="text-main-hero font-roboto font-semibold text-black">Start to Arkive<br/>Your-Travel</h1>
+                <h1 className="text-main lg:text-main-hero font-roboto font-semibold text-black">Start to Arkive<br/>Your-Travel</h1>
                 <Link href="/create">
                   <Button
                     type="button"
@@ -36,7 +36,7 @@ export default function MainPage() {
               </div>
               <h2 className="text-body font-medium text-black">당신의 여행을 TRAK에서 저장해보세요.</h2>
             </div>
-            <MousePointer size={240} strokeWidth={1}/>
+            <MousePointer size={200} strokeWidth={1}/>
 
           </div>
 

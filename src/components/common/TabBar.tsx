@@ -15,9 +15,9 @@ interface TabItemProps {
 
 const TAB_STYLES = {
   clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)',
-  width: '260px',
-  height: '60px',
 } as const;
+
+const TAB_SIZE_CLASSES = "w-[140px] h-[35px] lg:w-[260px] lg:h-[60px]";
 
 const TAB_SHADOW_STYLES = {
   filter: 'drop-shadow(4px 0px 4px rgba(0,0,0,0.25))',
@@ -47,8 +47,8 @@ function TabItem({ tab, isActive, index, total }: TabItemProps) {
           onKeyDown={(e) => e.key === 'Enter' && handleClick()}
           aria-current={isActive ? 'page' : undefined}
           aria-label={`${tab.title} 여행 탭`}
-          className="relative flex items-center cursor-pointer select-none
-                    transition-opacity hover:opacity-90 focus-visible:outline-none"
+          className={`relative flex items-center cursor-pointer select-none
+                    transition-opacity hover:opacity-90 focus-visible:outline-none ${TAB_SIZE_CLASSES}`}
           style={{
             ...TAB_STYLES,
             backgroundColor: tab.color,
@@ -57,7 +57,7 @@ function TabItem({ tab, isActive, index, total }: TabItemProps) {
           >
             {/* skew 상쇄 — 내부 콘텐츠 정방향 */}
             <span className="flex items-center gap-2 px-8 w-full">
-              <span className="truncate text-subtitle-lg font-semibold text-white flex-1">
+              <span className="truncate text-body lg:text-subtitle-lg font-semibold text-white flex-1">
                 {tab.title}
               </span>
               <button
@@ -81,7 +81,7 @@ function DefaultTab({index, total }: { index: number; total: number }) {
       <div style={TAB_SHADOW_STYLES}>
         <div
           aria-hidden="true"
-          className="bg-white "
+          className={`bg-white ${TAB_SIZE_CLASSES}`}
           style={TAB_STYLES}
         />
        </div>
@@ -91,15 +91,15 @@ function DefaultTab({index, total }: { index: number; total: number }) {
 
 function MoreTab() {
   return (
-    <li className="-ml-12" style={{ zIndex: 0 }} >
+    <li className="-ml-6 lg:-ml-12" style={{ zIndex: 0 }} >
       <div style={TAB_SHADOW_STYLES}>
         <Link
           href="/profile"
           aria-label="전체 여행 목록 보기"
-          className="flex items-center justify-center bg-gray-500 transition-opacity hover:opacity-90 focus-visible:outline-none"
+          className={`flex items-center justify-center bg-gray-500 transition-opacity hover:opacity-90 focus-visible:outline-none ${TAB_SIZE_CLASSES}`}
           style={TAB_STYLES}
         >
-          <span className="text-subtitle-lg font-semibold text-white">
+          <span className="text-body lg:text-subtitle-lg font-semibold text-white">
             More
           </span>
         </Link>
@@ -114,7 +114,7 @@ export function TabBar() {
 
   return (
     <nav aria-label="고정된 여행 탭" style={{ clipPath: 'inset(-20px -20px 0px -20px)' }}>
-      <ol className="flex items-end w-[1340px]">
+      <ol className="flex items-end lg:w-[1340px]">
         <DefaultTab index={0} total={total} />
         {tabs.map((tab, i) => (
           <TabItem
