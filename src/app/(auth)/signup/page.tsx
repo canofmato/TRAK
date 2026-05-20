@@ -22,7 +22,7 @@ export default function SignupPage() {
     register,
     handleSubmit,
     watch,
-    formState: { errors},
+    formState: { errors, isValid},
   } = useForm<SignupFormValues>({
     mode: "onChange",
   });
@@ -76,7 +76,7 @@ export default function SignupPage() {
         {/* 닉네임 */}
         <Input 
           name="nickname"
-          label="닉네임 *"
+          label="닉네임"
           placeholder="닉네임을 입력해주세요."
           variant="filled"
           sizeVariant="lg" 
@@ -87,7 +87,7 @@ export default function SignupPage() {
         {/* 이메일 */}
         <Input
           name="email"
-          label="이메일 *"
+          label="이메일"
           placeholder="이메일을 입력해주세요."
           variant="filled"
           sizeVariant="lg"
@@ -102,7 +102,7 @@ export default function SignupPage() {
         <Input
           name="password"
           type="password"
-          label="비밀번호 *"
+          label="비밀번호"
           placeholder="비밀번호를 입력해주세요."
           variant="filled"
           sizeVariant="lg"
@@ -125,7 +125,7 @@ export default function SignupPage() {
         <Input
           name="passwordCheck"
           type="password"
-          label="비밀번호 확인 *"
+          label="비밀번호 확인"
           placeholder="비밀번호를 다시 입력해주세요."
           variant="filled"
           sizeVariant="lg"
@@ -142,6 +142,7 @@ export default function SignupPage() {
           variant="primary"
           sizeVariant="lg"
           disabled={isLoading}
+          isActive={isValid}
         >
           회원가입
         </Button>
