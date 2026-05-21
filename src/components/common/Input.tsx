@@ -60,7 +60,7 @@ export default function Input({
   return (
     <div className={twMerge('flex flex-col gap-2 transition-all', className)}>
       {label && (
-        <label htmlFor={id || name } className="font-roboto text-caption text-start">
+        <label htmlFor={id || name } className="font-roboto text-base text-start">
           {label}
         </label>
       )}
