@@ -8,6 +8,7 @@ import type { TrakColor } from "@/components/common/ColorPalette/ColorSwatch";
 import Input from "@/components/common/Input";
 import Textarea from "@/components/common/Textarea";
 import Button from "@/components/common/Button";
+import ImageUploadInput from "@/components/common/ImageUploadInput";
 
 export default function CreatePage() {
   const [dropdownValue, setDropdownValue] = useState<string>("");
@@ -35,14 +36,10 @@ export default function CreatePage() {
             {/* create form */}
             <form className="w-full flex items-start justify-between">
               <div className="w-[420px] flex flex-col items-start gap-5">
-                <div className="flex flex-col gap-1">
-                  <label className="text-subtitle-md text-medium">대표 이미지</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="w-[420px] h-[470px] border border-dashed border-dark"
-                  />
-                </div>
+                <ImageUploadInput
+                  label="대표 이미지"
+                  name="cover_imqge_url"
+                />
                 
                 <div className="flex items-center gap-[10px]">
                 <Input
