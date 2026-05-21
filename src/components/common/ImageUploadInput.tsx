@@ -42,11 +42,32 @@ export default function ImageUploadInput({
 
   return (
     <div className={twMerge('flex flex-col gap-2 transition-all items-start w-full', className)}>
-      {label && (
-        <label className="text-subtitle-md text-medium">
-          {label}
-        </label>
-      )}
+      <div className="flex items-end justify-between w-full">
+        {label && (
+          <label className="text-subtitle-md text-medium">
+            {label}
+          </label>
+        )}
+        {previewUrl && (
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleButtonClick}
+              className="text-base text-gray-200 hover:text-gray-400 underline transition-all"
+            >
+              ReUpload
+            </button>
+            <button
+              type="button"
+              onClick={() => setPreviewUrl(null)}
+              className="text-base text-gray-200 hover:text-gray-400 underline transition-all"
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+      
 
 
       <div className={twMerge("relative flex items-center justify-center", baseAreaStyle)}>
