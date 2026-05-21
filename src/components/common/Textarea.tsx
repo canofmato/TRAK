@@ -4,8 +4,8 @@ import { twMerge } from "tailwind-merge";
 import { CommonProps } from "@/types/inputTypes";
 
 const SIZES =  {
-  lg: "w-[750px] h-[250px] p-5",
-  md: "w-[700px] h-[215px] p-5",
+  lg: "w-[750px] h-[250px] p-5 border border-light",
+  md: "w-[700px] h-[215px] p-5 border border-light",
 } as const;
 
 type TextareaProps = Omit<CommonProps, 'errors' | 'touchFields'> & {
@@ -23,10 +23,10 @@ export default function Textarea({
   ...rest
 }: TextareaProps) {
   const baseStyle = clsx(
-    'rounded-[10px] px-5 transition-all',
+    'rounded-[10px] transition-all',
     `bg-white text-base`,
     'text-gray-400 placeholder:text-gray-200',
-    'border border-light border-transparent focus:border-gray-300 focus:outline-non',
+    'border border-light border-transparent focus:border-dark focus:outline-none',
     SIZES[sizeVariant]
   );
 
