@@ -34,14 +34,13 @@ export default function CreatePage() {
             </div>
 
             {/* create form */}
-            <form className="w-full flex items-start justify-between">
-              <div className="w-[420px] flex flex-col items-start gap-5">
+            <form className="w-full flex flex-row lg:flex-row items-start justify-between">
+              <div className="w-full md:w-[300px] lg:w-[420px] flex flex-col items-start gap-5">
                 <ImageUploadInput
                   label="대표 이미지"
                   name="cover_imqge_url"
                 />
                 
-                <div className="flex items-center gap-[10px]">
                 <Input
                   name="hashtag"
                   label="해시태그" 
@@ -49,10 +48,10 @@ export default function CreatePage() {
                   variant="outlined"
                   sizeVariant="hashtag"
                 />
-                </div>
               </div>
-              <div className="flex flex-col w-full max-w-[750px] h-full items-center justify-between">
-                <div className="flex w-full items-center justify-between">
+
+              <div className="flex flex-col flex-1 w-full max-w-[750px] gap-3 items-center">
+                <div className="flex flex-col lg:flex-row w-full gap-3 items-center lg:justify-between">
                   <Input
                     name="title"
                     label="제목"
@@ -68,7 +67,7 @@ export default function CreatePage() {
                     sizeVariant="md"
                   />
                 </div>
-                <div className="flex w-full items-center justify-between">
+                <div className="flex flex-col lg:flex-row w-full gap-3  items-center lg: justify-between">
                   <Input
                     name="start_at"
                     label="시작일"
@@ -101,7 +100,7 @@ export default function CreatePage() {
                   <Button
                     type="submit"
                     variant="filled"
-                    sizeVariant="lg"
+                    sizeVariant="md"
                   >
                     아카이브 만들기
                   </Button>

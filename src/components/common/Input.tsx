@@ -10,10 +10,10 @@ const VARIANTS = {
 } as const;
 
 const SIZES =  {
-  lg: "w-[500px] h-[50px]",
-  md: "w-[360px] h-[50px]",
-  sm: "w-[300px] h-[50px]",
-  hashtag: "w-[420px] h-[50px]",
+  lg: "w-full max-w-[500px] h-[50px]",
+  md: "w-full min-w-[300px] max-w-[360px] h-[50px]",
+  sm: "w-full max-w-[300px] h-[50px]",
+  hashtag: "w-full max-w-[420px] min-w-[300px] h-[50px]",
 } as const;
 
 // isTextArea 값에 따라 허용 속성을 다르게 분류

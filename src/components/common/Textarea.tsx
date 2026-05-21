@@ -4,8 +4,8 @@ import { twMerge } from "tailwind-merge";
 import { CommonProps } from "@/types/inputTypes";
 
 const SIZES =  {
-  lg: "w-[750px] h-[250px] p-5 border border-light",
-  md: "w-[700px] h-[215px] p-5 border border-light",
+  lg: "w-full max-w-[750px] min-w-[300px] h-[250px] p-5 border border-light",
+  md: "w-full max-w-[700px] min-w-[300px] h-[215px] p-5 border border-light",
 } as const;
 
 type TextareaProps = Omit<CommonProps, 'errors' | 'touchFields'> & {
@@ -31,7 +31,7 @@ export default function Textarea({
   );
 
   return (
-    <div className={twMerge('flex flex-col gap-2 transition-all', className)}>
+    <div className={twMerge('w-full flex flex-col gap-2 transition-all', className)}>
       {label && (
         <label htmlFor={id ?? name} className="font-roboto text-caption text-start">
           {label}

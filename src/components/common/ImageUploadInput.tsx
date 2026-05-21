@@ -38,7 +38,7 @@ export default function ImageUploadInput({
     }
   };
 
-  const baseAreaStyle = 'w-[420px] h-[470px] border border-dashed border-dark transition-all rounded-[10px] overflow-hidden';
+  const baseAreaStyle = 'w-full min-w-[300px] max-w-[420px] h-full min-h-[370px] max-h-[470px] border border-dashed border-dark transition-all rounded-[10px] overflow-hidden';
 
   return (
     <div className={twMerge('flex flex-col gap-2 transition-all items-start', className)}>
