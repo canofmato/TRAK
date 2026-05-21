@@ -9,6 +9,7 @@ import Input from "@/components/common/Input";
 import Textarea from "@/components/common/Textarea";
 import Button from "@/components/common/Button";
 import ImageUploadInput from "@/components/common/ImageUploadInput";
+import HashtagInput from "@/components/common/HashtagInput";
 
 function FormButtons() {
   return (
@@ -25,6 +26,7 @@ function FormButtons() {
 
 export default function CreatePage() {
   const [dropdownValue, setDropdownValue] = useState<string>("");
+  const [hashtags, setHashtags] = useState<string[]>([]);
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
@@ -56,14 +58,11 @@ export default function CreatePage() {
                     name="cover_imqge_url"
                   />
                   
-                  <Input
-                    name="hashtag"
-                    label="해시태그" 
-                    placeholder="예: HONGKONG"
-                    variant="outlined"
-                    sizeVariant="hashtag"
-                    className="w-full" 
-                    inputClassName="max-w-full"
+                  <HashtagInput
+                    label="해시태그"
+                    value={hashtags}
+                    onChange={setHashtags}
+                    className="w-full"
                   />
                 </div>
 

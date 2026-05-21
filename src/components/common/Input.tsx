@@ -13,7 +13,6 @@ const SIZES =  {
   lg: "max-w-[500px]",
   md: "max-w-[360px]",
   sm: "max-w-[300px]",
-  hashtag: "max-w-[420px]",
 } as const;
 
 // isTextArea 값에 따라 허용 속성을 다르게 분류

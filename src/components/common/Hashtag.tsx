@@ -14,7 +14,7 @@ export function Hashtag({ text, onClick, onDelete }: HashtagProps) {
         inline-flex items-center p-3 rounded-full
         bg-primary/30 text-black text-body
         transition-all duration-150 cursor-pointer
-        hover:bg-red/30 hover:text-red hover:shadow-sm
+        hover:bg-red/30 hover:shadow-sm
         active:scale-95 focus-visible:outline-2 
         focus-visible:outline-offset-2 focus-visible:outline-blue-200
       "
