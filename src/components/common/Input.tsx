@@ -6,7 +6,7 @@ import { CommonProps } from "@/types/inputTypes";
 
 const VARIANTS = {
   filled: "bg-gray-200/20 text-base focus:bg-gray-100/50 border focus:border-light",
-  outlined: "bg-white text-base border border-light focus:border-dark",
+  outlined: "bg-white text-base border border-light focus:border-darker",
 } as const;
 
 const SIZES =  {
@@ -52,7 +52,7 @@ export default function Input({
   const baseStyle = clsx(
     'rounded-[10px] px-5 transition-all',
     'text-gray-400 placeholder:text-gray-200',
-    'focus:outline-none',
+    'border border-transparent focus:outline-none',
     VARIANTS[variant],
     SIZES[sizeVariant]
   )
