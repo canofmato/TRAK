@@ -26,7 +26,7 @@ export function Footer() {
       </div>
 
       <Link href="/main" aria-label="홈으로 이동">
-        <Logo className="h-[70px] aspect-square shrink-0"/>
+        <Logo className="h-[50px] aspect-square shrink-0"/>
       </Link>
 
       <span className="text-caption lg:text-body text-black">
