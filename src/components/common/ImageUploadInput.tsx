@@ -38,10 +38,10 @@ export default function ImageUploadInput({
     }
   };
 
-  const baseAreaStyle = 'w-full min-w-[300px] max-w-[420px] h-full min-h-[370px] max-h-[470px] border border-dashed border-dark transition-all rounded-[10px] overflow-hidden';
+  const baseAreaStyle = 'w-full  min-h-[360px] lg:h-[470px] lg:max-h-[470px]  border border-dashed border-dark transition-all rounded-[10px] overflow-hidden';
 
   return (
-    <div className={twMerge('flex flex-col gap-2 transition-all items-start', className)}>
+    <div className={twMerge('flex flex-col gap-2 transition-all items-start w-full', className)}>
       {label && (
         <label className="text-subtitle-md text-medium">
           {label}

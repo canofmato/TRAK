@@ -23,8 +23,8 @@ const VARIANTS = {
 
 const SIZES = {
   lg: "w-full max-w-[500px]",
-  md: "w-full max-w-[470px] min-w-[320px]",
-  sm: "w-[250px]",
+  md: "w-full max-w-[470px]",
+  sm: "w-full w-[250px]",
   ss: "w-[60px]",
 } as const;
 

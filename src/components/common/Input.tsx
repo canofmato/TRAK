@@ -10,16 +10,17 @@ const VARIANTS = {
 } as const;
 
 const SIZES =  {
-  lg: "w-full max-w-[500px] h-[50px]",
-  md: "w-full min-w-[300px] max-w-[360px] h-[50px]",
-  sm: "w-full max-w-[300px] h-[50px]",
-  hashtag: "w-full max-w-[420px] min-w-[300px] h-[50px]",
+  lg: "max-w-[500px]",
+  md: "max-w-[360px]",
+  sm: "max-w-[300px]",
+  hashtag: "max-w-[420px]",
 } as const;
 
 // isTextArea 값에 따라 허용 속성을 다르게 분류
 type InputProps =  CommonProps & {
   variant?: keyof typeof VARIANTS;
   sizeVariant?: keyof typeof SIZES;
+  inputClassName?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, keyof CommonProps>;
 
 export default function Input({
@@ -27,6 +28,7 @@ export default function Input({
   sizeVariant ='md',
   label,
   className,
+  inputClassName,
   id,
   placeholder,
   name,
@@ -50,11 +52,10 @@ export default function Input({
 
   // 공통 스타일 정의
   const baseStyle = clsx(
-    'rounded-[10px] px-5 transition-all',
+    'w-full h-[50px] rounded-[10px] px-5 transition-all',
     'text-gray-400 placeholder:text-gray-200',
     'border border-transparent focus:outline-none',
     VARIANTS[variant],
-    SIZES[sizeVariant]
   )
 
   return (
@@ -64,7 +65,7 @@ export default function Input({
           {label}
         </label>
       )}
-      <div className={twMerge("relative",  SIZES[sizeVariant])}>
+      <div className={twMerge("relative w-full h-[50px]", SIZES[sizeVariant], inputClassName)}>
           <input
             id={id ?? name}
             type={isPasswordType && showPassword ? "text" : type}
