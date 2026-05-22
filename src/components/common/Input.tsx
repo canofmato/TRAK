@@ -6,20 +6,20 @@ import { CommonProps } from "@/types/inputTypes";
 
 const VARIANTS = {
   filled: "bg-gray-200/20 text-base focus:bg-gray-100/50 border focus:border-light",
-  outlined: "bg-white text-base",
+  outlined: "bg-white text-base border border-light focus:border-darker",
 } as const;
 
 const SIZES =  {
-  lg: "w-[500px] h-[50px]",
-  md: "w-[360px] h-[50px]",
-  sm: "w-[300px] h-[50px]",
-  hashtag: "w-[420px] h-[50px]",
+  lg: "max-w-[500px]",
+  md: "max-w-[360px]",
+  sm: "max-w-[300px]",
 } as const;
 
 // isTextArea 값에 따라 허용 속성을 다르게 분류
 type InputProps =  CommonProps & {
   variant?: keyof typeof VARIANTS;
   sizeVariant?: keyof typeof SIZES;
+  inputClassName?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, keyof CommonProps>;
 
 export default function Input({
@@ -27,6 +27,7 @@ export default function Input({
   sizeVariant ='md',
   label,
   className,
+  inputClassName,
   id,
   placeholder,
   name,
@@ -50,21 +51,20 @@ export default function Input({
 
   // 공통 스타일 정의
   const baseStyle = clsx(
-    'rounded-[10px] px-5 transition-all',
+    'w-full h-[50px] rounded-[10px] px-5 transition-all',
     'text-gray-400 placeholder:text-gray-200',
-    'border border-light border-transparent focus:outline-none focus:border-dark',
+    'border border-transparent focus:outline-none',
     VARIANTS[variant],
-    SIZES[sizeVariant]
   )
 
   return (
     <div className={twMerge('flex flex-col gap-2 transition-all', className)}>
       {label && (
-        <label htmlFor={id || name } className="font-roboto text-caption text-start">
+        <label htmlFor={id || name } className="font-roboto text-base text-start">
           {label}
         </label>
       )}
-      <div className={twMerge("relative",  SIZES[sizeVariant])}>
+      <div className={twMerge("relative w-full h-[50px]", SIZES[sizeVariant], inputClassName)}>
           <input
             id={id ?? name}
             type={isPasswordType && showPassword ? "text" : type}
