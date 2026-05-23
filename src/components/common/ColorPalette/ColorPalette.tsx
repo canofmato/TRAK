@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState, useEffect, useRef } from "react";
-import { ColorSwatch, TRAK_COLORS, type TrakColor } from "./ColorSwatch";
+import { ColorSwatch, TRAK_COLORS, FOLDER_COLORS, type TrakColor } from "./ColorSwatch";
 
 // ─── 유틸 ─────────────────────────────────────────────────────────────────────
 
@@ -26,7 +26,6 @@ function createCustomColor(hex: string): TrakColor {
 interface BaseProps {
   value?: string;
   onChange?: (color: TrakColor) => void;
-  allowCustom?: boolean;
 }
 
 interface StaticProps extends BaseProps {
@@ -35,6 +34,7 @@ interface StaticProps extends BaseProps {
 
 interface DropdownProps extends BaseProps {
   mode: "dropdown";
+  allowCustom?: boolean;
 }
 
 type ColorPaletteProps = StaticProps | DropdownProps;
@@ -42,13 +42,13 @@ type ColorPaletteProps = StaticProps | DropdownProps;
 // ─── 메인 컴포넌트  ─────────────────────────────────────────────────────────────────────
 
 export function ColorPalette(props: ColorPaletteProps) {
-  const {
-    value,
-    onChange,
-    allowCustom = true,
-  } = props;
+  const { value, onChange,} = props;
+  const allowCustom = props.mode === "dropdown" ? (props.allowCustom ?? true) : false;
+
+  // 💡 [핵심] static일 땐 5개짜리 배열을, dropdown일 땐 4개짜리 배열을 검사합니다.
+  const colorsToUse = props.mode === "static" ? FOLDER_COLORS : TRAK_COLORS;
   // 기본 제공 색상 중에 현재 value가 있는지 확인
-  const defaultColor = TRAK_COLORS.find((c) => c.hex.toLowerCase() === value?.toLowerCase());
+  const defaultColor = colorsToUse.find((c) => c.hex.toLowerCase() === value?.toLowerCase());
   // 없는데 value가 존재한다면 사용자가 지정한 커스텀 색상으로 간주
   const selectedColor = defaultColor ?? (value ? createCustomColor(value) : null);
 
@@ -64,9 +64,7 @@ export function ColorPalette(props: ColorPaletteProps) {
     return (
       <StaticPalette
         selectedColor={selectedColor}
-        allowCustom={allowCustom}
         onChange={onChange}
-        onCustomColorChange={handleCustomColorChange}
       />
     );
   }
@@ -156,22 +154,16 @@ function AddColorButton({ customHex, isSelected, onColorChange }: AddColorButton
 
 interface StaticPaletteProps {
   selectedColor: TrakColor | null;
-  allowCustom: boolean;
   onChange?: (color: TrakColor) => void;
-  onCustomColorChange: (hex: string) => void;
 }
 
 function StaticPalette({
   selectedColor,
-  allowCustom,
   onChange,
-  onCustomColorChange,
 }: StaticPaletteProps) {
-  const isCustomSelected = !!(selectedColor && selectedColor.id.startsWith("custom-"));
-
   return (
     <div role="group" aria-label="색상 팔레트" className="flex items-center gap-3">
-      {TRAK_COLORS.map((color) => (
+      {FOLDER_COLORS.map((color) => (
         <Swatch
           key={color.id}
           color={color}
@@ -179,13 +171,6 @@ function StaticPalette({
           onClick={onChange}
         />
       ))}
-      {allowCustom && (
-        <AddColorButton 
-          customHex={isCustomSelected ? selectedColor!.hex : null}
-          isSelected={isCustomSelected}
-          onColorChange={onCustomColorChange}
-        />
-      )}
     </div>
   );
 };

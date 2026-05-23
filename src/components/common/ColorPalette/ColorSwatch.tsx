@@ -12,6 +12,11 @@ export const TRAK_COLORS: TrakColor[] = [
   {id: "lime", label:"lime", bgClass:"bg-lime", hex: "#D4EBDB"},
 ];
 
+export const FOLDER_COLORS: TrakColor[] = [
+  ...TRAK_COLORS,
+  {id: "gray", label:"gray", bgClass:"bg-[#7B7B7B]", hex: "#7B7B7B"},
+];
+
 interface ColorSwatchProps {
   color: TrakColor;
   selected?: boolean;

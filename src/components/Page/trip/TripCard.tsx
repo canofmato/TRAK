@@ -1,5 +1,5 @@
 import Map from "@/assets/icons/Map.svg"
-import { Hashtag } from "./Hashtag"
+import { Hashtag } from "../../common/Hashtag"
 import { Trip } from  "@/types/database.types";
 
 interface TripCardProps {
@@ -14,18 +14,18 @@ export default function TripCard({ trip, photoCount = 0 }: TripCardProps) {
     <article className="w-full h-full flex-1 bg-white flex gap-10">
       {/* Info */}
       <div className="flex flex-col gap-2 px-3">
-        <div className="flex items-center gap-5 text-black">
-          <div className="flex flex-col h-10 items-center justify-between">
+        <div className="flex items-start gap-5 py-3 text-black">
+          <div className="flex flex-col items-center justify-between">
             <p className="font-base">LOCATION</p>
             <span className="font-base font-semibold">{trip.location || '-'}</span>
           </div>
 
-           <div className="flex flex-col h-10 items-center justify-between">
+           <div className="flex flex-col items-center justify-between">
             <p className="font-base">MAP</p>
             <Map size={20}/>
           </div>
 
-           <div className="flex flex-col h-10 items-center justify-between">
+           <div className="flex flex-col items-center justify-between">
             <p className="font-base">PHOTOS</p>
             <span className="font-base font-semibold">{photoCount}</span>
           </div>
@@ -36,7 +36,6 @@ export default function TripCard({ trip, photoCount = 0 }: TripCardProps) {
           <Hashtag 
             key={tag} 
             text={tag} 
-            className="text-base"
           />
         ))}
 
