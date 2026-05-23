@@ -124,10 +124,10 @@ export default function TripPage() {
 
                 {/* 데스크탑 전용: 통합 카드 (정보 + 카드) */}
                 <div className="hidden lg:flex w-full flex-1 bg-white px-3 gap-8 items-center justify-between">
-                  <div className="w-1/2 h-full flex flex-col">
+                  <div className="w-full h-full">
                     <TripCard trip={trip} photoCount={photoCount} />
                   </div>
-                  <div className="w-1/2 flex flex-col">
+                  <div className="shrink-0 h-full flex items-center">
                     <FolderGrid folders={folders}/>
                   </div>
                 </div>
