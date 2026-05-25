@@ -63,7 +63,7 @@ function TabItem({ tab, isActive, index, total }: TabItemProps) {
                 type="button"
                 onClick={handleRemove}
                 aria-label={`${tab.title} 탭 닫기`}
-                className="absolute top-1 right-[18%] p-0.5 p-0.5 text-white/70 hover:text-white transition-colors invisible group-hover:visible"
+                className="absolute top-1 right-[18%] p-0.5 p-0.5 text-white hover:text-white transition-colors invisible group-hover:visible"
               >
                 <X size={20} strokeWidth={5} />
               </button>

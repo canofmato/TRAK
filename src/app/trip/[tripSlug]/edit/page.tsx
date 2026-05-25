@@ -25,13 +25,18 @@ interface EditTripFormValues {
 }
 
 const generateSlug = (title: string) => {
-  return title
+  const base = title
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9가-힣\s-]/g, "") // 특수문자 제거 (한글 포함)
+    .replace(/[^a-z0-9\s-]/g, "") // 한글 등 비 ASCII 전부 제거
     .replace(/\s+/g, "-")             // 공백을 하이픈으로 변경
     .replace(/-+/g, "-")              // 중복 하이픈 축소
-    + `-${Date.now().toString().slice(-5)}`; // 💡 전역 UNIQUE 제약을 통과하기 위해 타임스탬프 뒤 5자리 결합
+    .replace(/^-|-$/g, "")        // 앞뒤 하이픈 제거
+
+  // 순수 한글 제목이면 base가 빈 문자열 → trip으로 fallback
+  const safeBase = base || "trip"
+
+  return `${safeBase}-${Date.now().toString().slice(-5)}`
 };
 
 const hasChanges = (
