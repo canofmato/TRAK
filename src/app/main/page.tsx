@@ -1,5 +1,5 @@
 import Button from "@/components/common/Button";
-import { TabBar } from "@/components/common/TabBar";
+import { TabBar } from "@/components/layout/TabBar";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import Link from "next/link";

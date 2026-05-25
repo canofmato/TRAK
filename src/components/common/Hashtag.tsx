@@ -1,24 +1,31 @@
+import { twMerge } from "tailwind-merge";
+
 interface HashtagProps {
   text: string;
   onClick?: (text: string) => void;
   onDelete?: (text: string) => void;
 };
 
-export function Hashtag({ text, onClick, onDelete }: HashtagProps) {
+export function Hashtag({ text, onClick, onDelete}: HashtagProps) {
   const formattedText = text.startsWith("#") ? text: `#${text}`;
+
+  const isDeletable = !!onDelete;
+
   return (
     <button
       type="button"
-      aria-label={`${text} 태그 클릭하여 삭제`}
-      className="
-        inline-flex items-center p-3 rounded-full
-        bg-primary/30 text-black text-body
-        transition-all duration-150 cursor-pointer
-        hover:bg-red/30 hover:shadow-sm
-        active:scale-95 focus-visible:outline-2 
-        focus-visible:outline-offset-2 focus-visible:outline-blue-200
-      "
-      onClick={() => onDelete?.(text)}
+      aria-label={`${text} 태그 ${isDeletable ? '클릭하여 삭제' : ''}`}
+      className={twMerge(
+       "inline-flex items-center rounded-full bg-primary/30 text-black transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-200",
+       isDeletable
+        ? "p-3 text-body cursor-pointer hover:bg-red/30 hover:shadow-sm active:scale-95 "
+        : "p-1 text-base cursor-default",
+      )}
+        onClick={() => {
+          if (onDelete) onDelete(text);
+          else if (onClick) onClick(text);
+        }}
+        disabled={!isDeletable && !onClick}
     >
       <span>{formattedText}</span>
     </button>

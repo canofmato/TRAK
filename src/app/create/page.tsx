@@ -1,14 +1,14 @@
 
 'use client'
 import { ColorPalette } from "@/components/common/ColorPalette/ColorPalette";
-import { TabBar } from "@/components/common/TabBar";
+import { TabBar } from "@/components/layout/TabBar";
 import { Header } from "@/components/layout/Header";
 import { useState } from "react";
 import type { TrakColor } from "@/components/common/ColorPalette/ColorSwatch";
 import Input from "@/components/common/Input";
 import Textarea from "@/components/common/Textarea";
 import Button from "@/components/common/Button";
-import ImageUploadInput from "@/components/common/ImageUploadInput";
+import ImageUploadInput from "@/components/Page/trip/ImageUploadInput";
 import HashtagInput from "@/components/common/HashtagInput";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
