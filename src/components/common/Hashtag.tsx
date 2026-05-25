@@ -16,7 +16,7 @@ export function Hashtag({ text, onClick, onDelete}: HashtagProps) {
       type="button"
       aria-label={`${text} 태그 ${isDeletable ? '클릭하여 삭제' : ''}`}
       className={twMerge(
-       "inline-flex items-center rounded-full bg-primary/30 text-black transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-200",
+       "shrink-0 inline-flex items-center rounded-full bg-primary/30 text-black transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-200",
        isDeletable
         ? "p-3 text-body cursor-pointer hover:bg-red/30 hover:shadow-sm active:scale-95 "
         : "p-1 text-base cursor-default",

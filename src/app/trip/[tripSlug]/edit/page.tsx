@@ -3,36 +3,25 @@
 import { ColorPalette } from "@/components/common/ColorPalette/ColorPalette";
 import { TabBar } from "@/components/layout/TabBar";
 import { Header } from "@/components/layout/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { TrakColor } from "@/components/common/ColorPalette/ColorSwatch";
 import Input from "@/components/common/Input";
 import Textarea from "@/components/common/Textarea";
 import Button from "@/components/common/Button";
 import ImageUploadInput from "@/components/Page/trip/ImageUploadInput";
 import HashtagInput from "@/components/common/HashtagInput";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useForm, SubmitHandler } from "react-hook-form";
+import type { Trip } from "@/types/database.types";
+import { useTabStore } from "@/store/tabStore";
 
-interface CreateTripFormValues {
+interface EditTripFormValues {
   title: string;
   location:string;
   start_at:string;
   end_at: string;
   description: string;
-}
-
-function FormButtons({ isLoading}: { isLoading: boolean}) {
-  return (
-    <div className="flex w-full items-center justify-between gap-6 ">
-      <Button type="button" variant="outlined" sizeVariant="sm" className="shrink-0">
-        취소
-      </Button>
-      <Button type="submit" variant="filled" sizeVariant="md">
-        {isLoading ? "생성 중..." : "아카이브 만들기"}
-      </Button>
-    </div>
-  );
 }
 
 const generateSlug = (title: string) => {
@@ -50,81 +39,159 @@ const generateSlug = (title: string) => {
   return `${safeBase}-${Date.now().toString().slice(-5)}`
 };
 
-export default function CreatePage() {
+const hasChanges = (
+  original: Trip,
+  watched: EditTripFormValues,
+  color: string,
+  coverImageUrl: string,
+  hashtags: string[]
+): boolean => {
+  return (
+    original.title !== watched.title ||
+    original.location !== (watched.location || null) ||
+    original.start_date !== (watched.start_at || null) ||
+    original.end_date !== (watched.end_at || null) ||
+    original.description !== (watched.description || null) ||
+    original.color !== (color || null) ||
+    original.cover_image_url !== (coverImageUrl || null) ||
+    JSON.stringify(original.hashtags) !== JSON.stringify(hashtags)
+  );
+};
+
+function FormButtons({ isLoading, isChanged, onCancel}: { isLoading: boolean; isChanged: boolean; onCancel: () => void}) {
+  return (
+    <div className="flex w-full items-center justify-between gap-6 ">
+      <Button type="button" variant="outlined" sizeVariant="sm" className="shrink-0" onClick={onCancel}>
+        취소
+      </Button>
+      <Button type="submit" variant="filled" sizeVariant="md" disabled={!isChanged || isLoading}>
+        {isLoading ? "생성 중..." : "아카이브 만들기"}
+      </Button>
+    </div>
+  );
+}
+
+export default function EditTripPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const params = useParams();
+  const tripSlug = Array.isArray(params.tripSlug) 
+    ? params.tripSlug[0] 
+    : params.tripSlug ?? "";
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+  const [tripId, setTripId] = useState<string>("");
 
   const [dropdownValue, setDropdownValue] = useState<string>("");
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [coverImageUrl, setCoverImageUrl] = useState<string>("");
-  
+
+  const [snapshot, setSnapshot] = useState<Trip | null>(null);
+
+  const pinTab = useTabStore((state) => state.pinTab);
+  const removeTab = useTabStore((state) => state.removeTab)
 
   const {
     register,
     handleSubmit,
+    reset,
+    watch,
     formState: { errors },
-  } = useForm<CreateTripFormValues>({
+  } = useForm<EditTripFormValues>({
     mode: "onChange"
   });
 
-  // 🔥 [핵심] 아카이브 생성 요청 (Supabase Insert)
-  const onSubmit: SubmitHandler<CreateTripFormValues> = async (data) => {
-    setIsLoading(true);
+  const watchedValues = watch();
 
+  const isChanged = snapshot
+    ? hasChanges(snapshot, watchedValues, dropdownValue, coverImageUrl, hashtags)
+    : false;
+  
+    useEffect(()=> {
+      if (!tripSlug) return;
+
+      const fetchTrip = async () => {
+        const { data, error } = await supabase
+          .from("trips")
+          .select("*")
+          .eq("slug", tripSlug)
+          .single();
+
+          if (error || !data) {
+            setIsFetching(false);
+            return;
+          }
+
+        reset({
+          title: data.title ?? "",
+          location: data.location ?? "",
+          start_at: data.start_date ?? "",
+          end_at: data.end_date ?? "",
+          description: data.description ?? "",
+        });
+
+        setTripId(data.id);
+        setDropdownValue(data.color ?? "");
+        setHashtags(data.hashtags ?? []);
+        setCoverImageUrl(data.cover_image_url ?? "");
+        setSnapshot(data);
+        setIsFetching(false);
+      };
+      fetchTrip();
+    }, [tripSlug, reset]);
+
+  const onSubmit: SubmitHandler<EditTripFormValues> = async (data) => {
+    setIsLoading(true);
     try {
-      // 1. 현재 로그인한 유저 정보 가져오기 (user_id 채우기용)
       const { data: { user }, error: userError } = await supabase.auth.getUser();
-      
       if (userError || !user) {
-        alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
         router.push("/login");
         return;
       }
 
-      // 2. 제목 기반 slug 생성
-      const tripSlug = generateSlug(data.title);
+      const titleChanged = snapshot?.title !== data.title;
+      const newSlug = titleChanged ? generateSlug(data.title) : tripSlug;
 
-      // 3. Supabase 'trips' 테이블에 데이터 꽂아넣기 🚀
-      const { data: insertedData, error: insertError } = await supabase
+      const { error: updateError } = await supabase
         .from("trips")
-        .insert({
-          user_id: user.id,                      // RLS 및 역정규화용 유저 ID
+        .update({
           title: data.title,
-          slug: tripSlug,                        // 자동 생성된 UNIQUE 슬러그
-          description: data.description,
-          location: data.location,
-          start_date: data.start_at || null,     // 비어있으면 null 처리
+          slug: newSlug,
+          description: data.description || null,
+          location: data.location || null,
+          start_date: data.start_at || null,
           end_date: data.end_at || null,
-          cover_image_url: coverImageUrl || null, // 업로드된 이미지 URL
-          color: dropdownValue || null,          // ColorPalette 컴포넌트 hex 값 바인딩
-          hashtags: hashtags,                    // text[] 배열 타입 그대로 바인딩
-          latitude: 37.5665,                     // 💡 추후 Places Autocomplete 연동 시 동적 데이터로 교체
-          longitude: 126.9780,                   // 💡 추후 Places Autocomplete 연동 시 동적 데이터로 교체
+          cover_image_url: coverImageUrl || null,
+          color: dropdownValue || null,
+          hashtags: hashtags,
         })
-        .select()
-        .single();
+        .eq("id", tripId);
+      
+      if (updateError) throw updateError
 
-      if (insertError) {
-        throw insertError;
+      if (titleChanged) {
+        removeTab(tripSlug);
       }
 
-      alert("새로운 여행 아카이브가 성공적으로 만들어졌습니다! 🎉");
-      console.log("생성된 여행 데이터:", insertedData);
-      
-      // 성공 후 대시보드나 상세 페이지로 이동
-      router.push(`/trip/${tripSlug}`);
+      pinTab({
+        tripSlug: newSlug,
+        title: data.title,
+        color: dropdownValue || "#D7E8F8",
+        coverImageUrl: coverImageUrl || null,
+      });
+
+      router.push(`/trip/${newSlug}`);
 
     } catch (error) {
-      if (error instanceof Error) {
-        alert(`아카이브 생성 실패... ❌ \n사유: ${error.message}`);
-      } else {
-        alert("알 수 없는 에러가 발생했습니다.");
-      }
-      console.error(error);
+      console.error("여행 수정 실패:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isFetching) {
+    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+  }
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
@@ -154,6 +221,7 @@ export default function CreatePage() {
                   <ImageUploadInput
                     label="대표 이미지"
                     name="cover_image_url"
+                    initialUrl={coverImageUrl}
                     onUploadSuccess={(url) => setCoverImageUrl(url)}
                   />
                   
@@ -222,12 +290,20 @@ export default function CreatePage() {
                     register={register("description")}
                   />
                   <div className="hidden lg:block w-full">
-                    <FormButtons isLoading={isLoading} />
+                    <FormButtons 
+                      isLoading={isLoading}
+                      isChanged={isChanged}
+                      onCancel={() => router.push(`/trip/${tripSlug}`)}
+                    />
                   </div>
                 </div>
               </div>
               <div className="block lg:hidden w-full">
-                <FormButtons isLoading={isLoading} />
+                <FormButtons
+                  isLoading={isLoading}
+                  isChanged={isChanged}
+                  onCancel={() => router.push(`/trip/${tripSlug}`)}
+                />
               </div>
               
             </form>

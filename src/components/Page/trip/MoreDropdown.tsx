@@ -5,8 +5,8 @@ import { useTabStore } from "@/store/tabStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import More from "@/assets/icons/More.svg";
-import Button from "../common/Button";
-import DeleteConfirmModal from "./trip/DeleteConfirmModal";
+import Button from "@/components/common/Button"
+import DeleteConfirmModal from "@/components/Page/trip/DeleteConfirmModal";
 
 interface MoreDropdownProps {
   tripId: string;
@@ -33,7 +33,7 @@ export default function MoreDropdown({ tripId, tripSlug }: MoreDropdownProps) {
   }, [])
 
   const handleEdit = () => {
-    router.push(`/trip/[tripSlug]/edit`)
+    router.push(`/trip/${tripSlug}/edit`)
   }
 
   const handleDeleteConfirm = async () => {

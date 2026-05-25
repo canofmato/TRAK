@@ -22,6 +22,8 @@ export default function HashtagInput({
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
+    // 한글 조합 중이면 무시
+    if (e.nativeEvent.isComposing) return;
     e.preventDefault();
 
     const trimmed = inputValue.trim().toUpperCase().replace(/^#/, "");

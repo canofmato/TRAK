@@ -11,7 +11,7 @@ import { Trip, PhotoFolder } from "@/types/database.types";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTabStore } from "@/store/tabStore";
-import MoreDropdown from "@/components/Page/MoreDropdonw";
+import MoreDropdown from "@/components/Page/trip/MoreDropdown";
 
 export default function TripPage() {
   const params = useParams();

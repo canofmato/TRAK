@@ -11,6 +11,7 @@ type ImageUploadInputProps = {
   name: string;
   register?: UseFormRegisterReturn;
   className?: string;
+  initialUrl?: string;
   onUploadSuccess?: (url: string) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
@@ -19,10 +20,11 @@ export default function ImageUploadInput({
   name,
   register,
   className,
+  initialUrl,
   onUploadSuccess,
   ...rest
 }: ImageUploadInputProps) {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl ?? null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
