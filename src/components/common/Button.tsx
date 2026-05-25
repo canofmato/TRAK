@@ -16,7 +16,7 @@ const VARIANTS = {
     active: undefined,
   },
   delete: {
-    base: "bg-white border border-red text-red",
+    base: "bg-white border border-red text-red hover:bg-red/20",
     active: undefined,
   },
 } as const;

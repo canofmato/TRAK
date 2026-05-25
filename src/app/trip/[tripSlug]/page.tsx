@@ -4,7 +4,6 @@ import { TabBar } from "@/components/layout/TabBar";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import TripImage from "@/components/Page/trip/TripImage";
-import More from "@/assets/icons/More.svg";
 import FolderGrid from "@/components/Page/trip/FolderGrid";
 import TripCard from "@/components/Page/trip/TripCard";
 import { supabase } from "@/lib/supabaseClient";
@@ -12,6 +11,7 @@ import { Trip, PhotoFolder } from "@/types/database.types";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTabStore } from "@/store/tabStore";
+import MoreDropdown from "@/components/Page/MoreDropdonw";
 
 export default function TripPage() {
   const params = useParams();
@@ -121,9 +121,7 @@ export default function TripPage() {
                     <h1 className="font-semibold text-white text-heading-md">{trip.title}</h1>
                     <p className="font-semibold text-white text-base">{startDate} ~ {endDate}</p>
                   </div>
-                  <button>
-                    <More size={40}/>
-                  </button>
+                  <MoreDropdown tripId={trip.id} tripSlug={tripSlug} />
                 </header>
 
                 {/* 태블릿 전용: 폴더 영역 */}

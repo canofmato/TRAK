@@ -1,6 +1,7 @@
 import Map from "@/assets/icons/Map.svg"
 import { Hashtag } from "../../common/Hashtag"
 import { Trip } from  "@/types/database.types";
+import Link from "next/link";
 
 interface TripCardProps {
   trip: Trip;
@@ -22,7 +23,13 @@ export default function TripCard({ trip, photoCount = 0 }: TripCardProps) {
 
            <div className="flex flex-col items-center justify-between">
             <p className="font-base">MAP</p>
-            <Map size={20}/>
+            <Link
+              href="/map"
+              aria-label="지도 보기"
+            >
+              <Map size={20}/>
+            </Link>
+            
           </div>
 
            <div className="flex flex-col items-center justify-between">
