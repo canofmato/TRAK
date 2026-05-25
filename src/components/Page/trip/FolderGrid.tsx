@@ -8,16 +8,18 @@ import FolderBlue from "@/assets/icons/folder-blue.svg"
 import FolderRose from "@/assets/icons/folder-rose.svg"
 import FolderLime from "@/assets/icons/folder-lime.svg"
 import FolderGray from "@/assets/icons/folder-gray.svg"
+import { useRouter } from "next/navigation";
 
 interface FolderGridProps {
   folders?: PhotoFolder[];
+  tripSlug: string;
   className?: string;
   onAddClick?: () => void;
 }
 
 const folderIconMap = {
   amber: FolderAmber,
-  blue: FolderBlue,
+  sky: FolderBlue,
   rose: FolderRose,
   lime: FolderLime,
   gray: FolderGray,
@@ -25,9 +27,19 @@ const folderIconMap = {
 
 type FolderColor = keyof typeof folderIconMap;
 
-export default function FolderGrid({folders = [], className, onAddClick }: FolderGridProps) {
+export default function FolderGrid({folders = [], tripSlug, className, onAddClick }: FolderGridProps) {
+  const router = useRouter();
   const tabletFolders = [...folders].reverse();
   const isFull = folders.length >= 4;
+
+  // ✅ onAddClick이 없으면 create-folder로 이동
+  const handleAddClick = () => {
+    if (onAddClick) {
+      onAddClick();
+    } else {
+      router.push(`/trip/${tripSlug}/create-folder`);
+    }
+  };
 
   return (
     <>
@@ -58,7 +70,7 @@ export default function FolderGrid({folders = [], className, onAddClick }: Folde
         {!isFull && (
           <li 
             className="relative w-[140px] row-start-2 col-start-2 shrink-0 cursor-pointer hover:-translate-y-1 transition-transform duration-200"
-            onClick={onAddClick}
+            onClick={handleAddClick}
           >
             <FolderGray className="w-full h-auto" />
             <span className="absolute inset-0 flex items-center justify-center text-heading-lg font-semibold text-black pt-3 pointer-events-none">
@@ -89,7 +101,7 @@ export default function FolderGrid({folders = [], className, onAddClick }: Folde
         {!isFull && (
           <li 
             className="relative w-[140px] shrink-0 cursor-pointer hover:-translate-y-1 transition-transform duration-200"
-            onClick={onAddClick}
+            onClick={handleAddClick}
           >
             <FolderGray className="w-full h-auto" />
             <span className="absolute inset-0 flex items-center justify-center text-heading-lg font-semibold text-black pt-3 pointer-events-none">
