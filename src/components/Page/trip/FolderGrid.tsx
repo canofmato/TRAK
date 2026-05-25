@@ -9,6 +9,7 @@ import FolderRose from "@/assets/icons/folder-rose.svg"
 import FolderLime from "@/assets/icons/folder-lime.svg"
 import FolderGray from "@/assets/icons/folder-gray.svg"
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface FolderGridProps {
   folders?: PhotoFolder[];
@@ -60,10 +61,16 @@ export default function FolderGrid({folders = [], tripSlug, className, onAddClic
               key={folder.id} 
               className={twMerge("relative w-[140px] cursor-pointer",gridClasses[index])}
             >
-              <FolderIcon className="w-full h-auto drop-shadow-sm" />
-              <span className="absolute inset-0 flex items-center justify-center font-semibold text-gray-700 px-3 pt-3 truncate pointer-events-none">
-                {folder.name}
-              </span>
+              <Link
+                href={`/trip/${tripSlug}/${folder.slug}`}
+                aria-label={`${folder.name} 폴더 보기`}
+                className="block hover:-translate-y-1 transition-transform duration-200"
+              >
+                <FolderIcon className="w-full h-auto drop-shadow-sm" />
+                <span className="absolute inset-0 flex items-center justify-center font-semibold text-gray-700 px-3 pt-3 truncate pointer-events-none">
+                  {folder.name}
+                </span>
+              </Link>
             </li>
           )
         })}
