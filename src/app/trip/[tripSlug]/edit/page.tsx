@@ -161,6 +161,8 @@ export default function EditTripPage() {
           hashtags: hashtags,
         })
         .eq("id", tripId);
+      
+      if (updateError) throw updateError
 
       if (titleChanged) {
         removeTab(tripSlug);

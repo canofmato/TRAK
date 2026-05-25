@@ -65,7 +65,7 @@ function TabItem({ tab, isActive, index, total }: TabItemProps) {
                 aria-label={`${tab.title} 탭 닫기`}
                 className="absolute top-1 right-[18%] p-0.5 p-0.5 text-white/70 hover:text-white transition-colors invisible group-hover:visible"
               >
-                <X size={20} strokeWidth={3} />
+                <X size={20} strokeWidth={5} />
               </button>
           </div>
         </div>
@@ -77,9 +77,10 @@ function DefaultTab({index, total }: { index: number; total: number }) {
   return (
     <li style={{ zIndex: total - index }}>
       <div style={TAB_SHADOW_STYLES}>
-        <div
-          aria-hidden="true"
-          className={`bg-white ${TAB_SIZE_CLASSES}`}
+        <Link
+          href="/main"
+          // aria-hidden="true"
+          className={`flex bg-white ${TAB_SIZE_CLASSES}`}
           style={TAB_STYLES}
         />
        </div>

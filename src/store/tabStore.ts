@@ -21,7 +21,16 @@ export const useTabStore = create<TabState>() (
       pinTab: (trip) =>
         set((state) => {
           const isDuplicate = state.tabs.some((t) => t.tripSlug === trip.tripSlug)
-          if (isDuplicate) return { activeSlug: trip.tripSlug }
+
+          // ✅ 중복이면 해당 탭 내용(색상, 제목 등) 업데이트
+          if (isDuplicate) {
+            return {
+              tabs: state.tabs.map((t) =>
+                t.tripSlug === trip.tripSlug ? { ...t, ...trip } : t
+              ),
+              activeSlug: trip.tripSlug,
+            }
+          }
 
           const next =
             state.tabs.length >= MAX_TABS
@@ -39,7 +48,7 @@ export const useTabStore = create<TabState>() (
               : state.activeSlug
           return { tabs: next, activeSlug }
         }),
-        
+
       setActive: (tripSlug) => set({ activeSlug: tripSlug }),
     }),
     { name: 'trak-tabs' }
