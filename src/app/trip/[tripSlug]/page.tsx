@@ -11,6 +11,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { Trip, PhotoFolder } from "@/types/database.types";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTabStore } from "@/store/tabStore";
 
 export default function TripPage() {
   const params = useParams();
@@ -21,6 +22,7 @@ export default function TripPage() {
   const [folders, setFolders] = useState<PhotoFolder[]>([]);
   const [photoCount, setPhotoCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const pinTab = useTabStore((state) => state.pinTab);
 
   // 2. 데이터 불러오기 로직
   useEffect(() => {
@@ -39,6 +41,13 @@ export default function TripPage() {
 
         if (tripData) {
           setTrip(tripData);
+
+          pinTab({
+            tripSlug: tripData.slug,
+            title: tripData.title,
+            color: tripData.color ?? '#D7E8F8',
+            coverImageUrl: tripData.cover_image_url ?? null,
+          })
 
           // [B] 해당 여행의 폴더 목록 가져오기
           const { data: folderData, error: folderError } = await supabase
@@ -72,7 +81,7 @@ export default function TripPage() {
     };
 
     fetchTripData();
-  }, [tripSlug]);
+  }, [tripSlug, pinTab]);
 
   // 로딩 및 데이터 없을 때의 예외 처리
   if (isLoading) {

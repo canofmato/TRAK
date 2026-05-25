@@ -47,7 +47,7 @@ function TabItem({ tab, isActive, index, total }: TabItemProps) {
           onKeyDown={(e) => e.key === 'Enter' && handleClick()}
           aria-current={isActive ? 'page' : undefined}
           aria-label={`${tab.title} 여행 탭`}
-          className={`relative flex items-center cursor-pointer select-none
+          className={`group relative flex items-center justify-center cursor-pointer select-none
                     transition-opacity hover:opacity-90 focus-visible:outline-none ${TAB_SIZE_CLASSES}`}
           style={{
             ...TAB_STYLES,
@@ -56,19 +56,17 @@ function TabItem({ tab, isActive, index, total }: TabItemProps) {
           }}
           >
             {/* skew 상쇄 — 내부 콘텐츠 정방향 */}
-            <span className="flex items-center gap-2 px-8 w-full">
-              <span className="truncate text-body lg:text-subtitle-lg font-semibold text-white flex-1">
+             <span className="truncate text-body lg:text-subtitle-lg font-semibold text-white">
                 {tab.title}
-              </span>
+              </span>  
               <button
                 type="button"
                 onClick={handleRemove}
                 aria-label={`${tab.title} 탭 닫기`}
-                className="shrink-0 p-0.5 text-white/70 hover:text-white transition-colors"
+                className="absolute top-1 right-[18%] p-0.5 p-0.5 text-white/70 hover:text-white transition-colors invisible group-hover:visible"
               >
-                <X size={12} strokeWidth={2.5} />
+                <X size={20} strokeWidth={3} />
               </button>
-            </span>
           </div>
         </div>
     </li>
