@@ -9,7 +9,7 @@ import { Trip } from "@/types/database.types";
 import { supabase } from "@/lib/supabaseClient";
 import Button from "@/components/common/Button";
 import Link from "next/link";
-import DeleteConfirmModal from "@/components/Page/trip/DeleteConfirmModal";
+import AuthConfirmModal from "@/components/profile/AuthConfirmModal";
 
 interface Profile {
   id: string;
@@ -192,7 +192,7 @@ export default function ProfilePage() {
 
       <Footer />
       {isLogoutModalOpen && (
-        <DeleteConfirmModal
+        <AuthConfirmModal
           isDeleting={isLoggingOut}
           onConfirm={handleLogout}
           onCancel={() => setIsLogoutModalOpen(false)}
@@ -200,6 +200,7 @@ export default function ProfilePage() {
             title: '로그아웃 하시겠습니까?',
             description: '언제든지 다시 로그인할 수 있어요.',
           }}
+          confirmLabel="로그아웃"
         />
       )}
     </div>
