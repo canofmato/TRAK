@@ -22,10 +22,10 @@ interface CreateTripFormValues {
   description: string;
 }
 
-function FormButtons({ isLoading}: { isLoading: boolean}) {
+function FormButtons({ isLoading, onCancel }: { isLoading: boolean; onCancel: () => void }) {
   return (
     <div className="flex w-full items-center justify-between gap-6 ">
-      <Button type="button" variant="outlined" sizeVariant="sm" className="shrink-0">
+      <Button type="button" variant="outlined" sizeVariant="sm" className="shrink-0" onClick={onCancel}>
         취소
       </Button>
       <Button type="submit" variant="filled" sizeVariant="md">
@@ -222,12 +222,12 @@ export default function CreatePage() {
                     register={register("description")}
                   />
                   <div className="hidden lg:block w-full">
-                    <FormButtons isLoading={isLoading} />
+                    <FormButtons isLoading={isLoading} onCancel={() => router.push('/main')}/>
                   </div>
                 </div>
               </div>
               <div className="block lg:hidden w-full">
-                <FormButtons isLoading={isLoading} />
+                <FormButtons isLoading={isLoading} onCancel={() => router.push(`/main`)}/>
               </div>
               
             </form>

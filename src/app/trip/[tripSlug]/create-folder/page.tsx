@@ -42,7 +42,7 @@ function FormButtons({ isLoading, onCancel }: { isLoading: boolean; onCancel: ()
         취소
       </Button>
       <Button type="submit" variant="filled" sizeVariant="md">
-        {isLoading ? "생성 중..." : "아카이브 만들기"}
+        {isLoading ? "생성 중..." : "폴더 만들기"}
       </Button>
     </div>
   );

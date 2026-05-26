@@ -211,7 +211,7 @@ export default function EditTripPage() {
                 value={dropdownValue}
                 onChange={(color: TrakColor) => setDropdownValue(color.hex)}
               />
-              <h1 className="text-subtitle-lg text-medium">아카이브 만들기</h1>
+              <h1 className="text-subtitle-lg text-medium">아카이브 수정하기</h1>
             </div>
 
             {/* create form */}

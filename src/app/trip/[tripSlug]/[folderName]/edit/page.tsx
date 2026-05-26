@@ -66,7 +66,7 @@ function FormButtons({ isLoading, isChanged, onCancel }: { isLoading: boolean; i
         취소
       </Button>
       <Button type="submit" variant="filled" sizeVariant="md" disabled={!isChanged || isLoading} >
-        {isLoading ? "생성 중..." : "아카이브 수정하기"}
+        {isLoading ? "생성 중..." : "폴더 수정하기"}
       </Button>
     </div>
   );
