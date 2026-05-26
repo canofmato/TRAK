@@ -1,25 +1,24 @@
 'use client'
 
 import { supabase } from "@/lib/supabaseClient";
-import { useTabStore } from "@/store/tabStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import More from "@/assets/icons/More.svg";
+import More from "@/assets/icons/More-black.svg";
 import Button from "@/components/common/Button"
 import DeleteConfirmModal from "@/components/Page/trip/DeleteConfirmModal";
 
 interface MoreDropdownProps {
-  tripId: string;
+  folderId: string;
   tripSlug: string;
+  folderSlug: string;
 }
 
-export default function MoreDropdown({ tripId, tripSlug }: MoreDropdownProps) {
+export default function FolderMoreDropdown({ folderId, tripSlug, folderSlug }: MoreDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const removeTab = useTabStore((state) => state.removeTab);
 
   // 외부 클릭시 드롭다운 닫기
   useEffect(()=> {
@@ -33,21 +32,19 @@ export default function MoreDropdown({ tripId, tripSlug }: MoreDropdownProps) {
   }, [])
 
   const handleEdit = () => {
-    router.push(`/trip/${tripSlug}/edit`)
+    router.push(`/trip/${tripSlug}/${folderSlug}/edit`)
   }
 
   const handleDeleteConfirm = async () => {
     setIsDeleting(true)
     try {
       const { error } = await supabase
-        .from('trips')
+        .from('photo_folders')
         .delete()
-        .eq('id', tripId)
+        .eq('id', folderId)
       if (error) throw error
 
-      removeTab(tripSlug);
-
-      router.push( `/main`)
+      router.push( `/trip/${tripSlug}`)
     } catch {
       setIsDeleting(false);
       setIsModalOpen(false);
@@ -100,8 +97,8 @@ export default function MoreDropdown({ tripId, tripSlug }: MoreDropdownProps) {
           onConfirm={handleDeleteConfirm}
           onCancel={() => setIsModalOpen(false)}
           message={{
-            title: '여행을 삭제하시겠습니까?',
-            description: '삭제된 여행은 다시 되돌릴 수 없습니다.',
+            title: '폴더를 삭제하시겠습니까?',
+            description: '삭제된 폴더는 다시 되돌릴 수 없습니다.',
           }}
         />
       )}

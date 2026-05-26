@@ -126,7 +126,7 @@ export default function TripPage() {
 
                 {/* 태블릿 전용: 폴더 영역 */}
                 <div className="block lg:hidden w-full mt-2">
-                  <FolderGrid folders={folders}/>
+                  <FolderGrid folders={folders} tripSlug={tripSlug}/>
                 </div>
 
                 {/* 데스크탑 전용: 통합 카드 (정보 + 카드) */}
@@ -135,7 +135,7 @@ export default function TripPage() {
                     <TripCard trip={trip} photoCount={photoCount} />
                   </div>
                   <div className="shrink-0 h-full flex items-center">
-                    <FolderGrid folders={folders}/>
+                    <FolderGrid folders={folders} tripSlug={tripSlug}/>
                   </div>
                 </div>
               </div>

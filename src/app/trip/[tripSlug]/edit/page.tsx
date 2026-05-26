@@ -65,7 +65,7 @@ function FormButtons({ isLoading, isChanged, onCancel}: { isLoading: boolean; is
         취소
       </Button>
       <Button type="submit" variant="filled" sizeVariant="md" disabled={!isChanged || isLoading}>
-        {isLoading ? "생성 중..." : "아카이브 만들기"}
+        {isLoading ? "생성 중..." : "아카이브 수정하기"}
       </Button>
     </div>
   );
@@ -205,13 +205,13 @@ export default function EditTripPage() {
           <div className="w-full flex flex-col items-start gap-5 p-4 border border-2 border-dashed border-dark">
 
             {/* title */}
-            <div className="flex px-3 py-1 gap-3 items-center">
+            <div className="flex py-1 gap-3 items-center">
               <ColorPalette 
                 mode="dropdown"
                 value={dropdownValue}
                 onChange={(color: TrakColor) => setDropdownValue(color.hex)}
               />
-              <h1 className="text-subtitle-lg text-medium">아카이브 만들기</h1>
+              <h1 className="text-subtitle-lg text-medium">아카이브 수정하기</h1>
             </div>
 
             {/* create form */}

@@ -5,7 +5,7 @@ import { CommonProps } from "@/types/inputTypes";
 
 const SIZES =  {
   lg: "w-full h-[100px] lg:h-[250px] p-5 border border-light",
-  md: "w-full h-[100px] lg:h-[215px] p-5 border border-light",
+  md: "w-full h-[215px] p-5 border border-light",
 } as const;
 
 type TextareaProps = Omit<CommonProps, 'errors' | 'touchFields'> & {
@@ -40,7 +40,7 @@ export default function Textarea({
       <textarea
         id={id ?? name}
         placeholder={placeholder}
-        className={twMerge(baseStyle, 'h-full')}
+        className={twMerge(baseStyle)}
         {...register}
         {...rest}
       />

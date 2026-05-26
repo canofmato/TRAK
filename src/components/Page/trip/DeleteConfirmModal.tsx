@@ -6,13 +6,19 @@ interface DeleteConfimModalProps {
   isDeleting: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  message: { 
+    title?: string
+    description?: string
+  }
 }
 
 export default function DeleteConfirmModal({
   isDeleting,
   onConfirm,
   onCancel,
+  message, 
 }: DeleteConfimModalProps) {
+
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
@@ -24,8 +30,8 @@ export default function DeleteConfirmModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center text-center">
-          <p className="text-subtitle-md text-black">여행을 삭제하시겠습니까?</p>
-          <p className="text-body text-gray-300">삭제된 여행은 다시 되돌릴 수 없습니다.</p>
+          <p className="text-subtitle-md text-black">{message.title}</p>
+          <p className="text-body text-gray-300">{message.description}</p>
         </div>
 
         <div className="flex gap-2">
