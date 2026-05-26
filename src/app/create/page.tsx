@@ -138,7 +138,7 @@ export default function CreatePage() {
           <div className="w-full flex flex-col items-start gap-5 p-4 border border-2 border-dashed border-dark">
 
             {/* title */}
-            <div className="flex px-3 py-1 gap-3 items-center">
+            <div className="flex py-1 gap-3 items-center">
               <ColorPalette 
                 mode="dropdown"
                 value={dropdownValue}

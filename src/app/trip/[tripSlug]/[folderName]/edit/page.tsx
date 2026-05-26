@@ -305,8 +305,8 @@ export default function EditFolderPage() {
           <div className="w-full flex flex-col items-start gap-5 p-4 border border-2 border-dashed border-dark">
 
             {/* title */}
-            <div className="flex px-3 py-1 gap-3 items-center">
-              <h1 className="text-subtitle-lg text-medium">사진 폴더 만들기</h1>
+            <div className="flex items-center">
+              <h1 className="text-subtitle-lg text-medium">폴더 수정하기</h1>
             </div>
 
             {/* create form */}
