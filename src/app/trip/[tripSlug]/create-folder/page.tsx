@@ -272,7 +272,7 @@ export default function CreateFolderPage() {
                   <Textarea
                     name="description"
                     label="설명"
-                    placeholder="여행에 대한 설명을 입력하세요."
+                    placeholder="폴더에 대한 설명을 입력하세요."
                     sizeVariant="md"
                     register={register("description")}
                   />
