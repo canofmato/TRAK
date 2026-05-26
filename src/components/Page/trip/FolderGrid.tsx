@@ -98,10 +98,17 @@ export default function FolderGrid({folders = [], tripSlug, className, onAddClic
               key={folder.id} 
               className="relative w-[140px] shrink-0 cursor-pointer hover:-translate-y-1 transition-transform duration-200"
             >
-              <FolderIcon className="w-full h-auto drop-shadow-sm" />
-              <span className="absolute inset-0 flex items-center justify-center font-semibold text-gray-700 px-3 pt-3 truncate pointer-events-none">
-                {folder.name}
-              </span>
+              <Link
+                 href={`/trip/${tripSlug}/${folder.slug}`}
+                aria-label={`${folder.name} 폴더 보기`}
+                className="block hover:-translate-y-1 transition-transform duration-200"
+              >
+                <FolderIcon className="w-full h-auto drop-shadow-sm" />
+                <span className="absolute inset-0 flex items-center justify-center font-semibold text-gray-700 px-3 pt-3 truncate pointer-events-none">
+                  {folder.name}
+                </span>
+              </Link>
+              
             </li>
           )
         })}

@@ -100,7 +100,7 @@ export default function FolderPage() {
                   <span className="text-gray-300 text-base">Trip</span>
                   <Link 
                     href={`/trip/${tripSlug}`}
-                    className="rounded-[30px] p-1 bg-primary text-black text-base"
+                    className="rounded-[30px] px-2 py-1 bg-primary text-black text-base"
                   >
                     {trip.title}
                   </Link>
@@ -123,7 +123,7 @@ export default function FolderPage() {
 
             {/* 사진 */}
             <div className="w-full flex flex-col gap-2">
-              <p className="text-body text-black">Photos ({photos.length})</p>
+              <p className="text-subtitle-md font-semibold text-black">Photos ({photos.length})</p>
               {photos.length === 0 ? (
                 <div className="w-full h-[200px] flex items-center justify-center text-gray-300 text-body">
                   아직 사진이 없어요.
