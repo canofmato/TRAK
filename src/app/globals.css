@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
 
 @theme {
   --font-roboto: var(--font-roboto);
@@ -62,4 +63,21 @@
   button:focus {
     outline: none;
   }
+}
+
+/* Leaflet Popup 스타일 커스텀 */
+.leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+}
+
+.leaflet-popup-content p {
+  margin: 0 !important;
 }

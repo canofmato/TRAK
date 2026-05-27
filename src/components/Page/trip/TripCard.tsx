@@ -24,7 +24,10 @@ export default function TripCard({ trip, photoCount = 0 }: TripCardProps) {
            <div className="flex flex-col items-center justify-between">
             <p className="font-base">MAP</p>
             <Link
-              href="/map"
+              href={`/map${trip.latitude && trip.longitude
+              ? `?lat=${trip.latitude}&lng=${trip.longitude}`
+              : ''
+            }`}
               aria-label="지도 보기"
             >
               <Map size={20}/>

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import { LuPencil } from "react-icons/lu"
+import { convertIfHeic } from "@/lib/convertHeic"
 
 interface AvatarUploadProps {
   initialUrl?: string
@@ -15,10 +16,12 @@ export default function AvatarUpload({ initialUrl, onUploadSuccess }: AvatarUplo
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const raw = e.target.files?.[0]
+    if (!raw) return
 
-    // 미리보기
+    // ✅ HEIC 변환
+    const file = await convertIfHeic(raw)
+
     const reader = new FileReader()
     reader.onloadend = () => setPreviewUrl(reader.result as string)
     reader.readAsDataURL(file)

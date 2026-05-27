@@ -11,6 +11,7 @@ import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LuPlus, LuX } from "react-icons/lu";
+import { convertIfHeic } from "@/lib/convertHeic";
 
 const MAX_PHOTOS = 30;
 
@@ -73,21 +74,22 @@ export default function CreateFolderPage() {
   });
 
   // ✅ 다중 사진 선택 핸들러 (최대 30장)
-  const handlePhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
+  const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawFiles = Array.from(e.target.files ?? []);
     const remaining = MAX_PHOTOS - photos.length;
 
-    if (files.length > remaining) {
-      alert(`사진은 최대 ${MAX_PHOTOS}장까지 업로드할 수 있어요. (${photos.length}장 이미 선택됨)`);
+    if (rawFiles.length > remaining) {
+      alert(`사진은 최대 ${MAX_PHOTOS}장까지 업로드할 수 있어요.`);
     }
 
-    const allowed = files.slice(0, remaining);
-    const newPreviews = allowed.map((f) => URL.createObjectURL(f));
+    const rawAllowed = rawFiles.slice(0, remaining);
 
-    setPhotos((prev) => [...prev, ...allowed]);
+    // ✅ HEIC 파일 변환
+    const convertedFiles = await Promise.all(rawAllowed.map(convertIfHeic));
+    const newPreviews = convertedFiles.map((f) => URL.createObjectURL(f));
+
+    setPhotos((prev) => [...prev, ...convertedFiles]);
     setPhotoPreviews((prev) => [...prev, ...newPreviews]);
-
-    // input 초기화 (같은 파일 재선택 가능하도록)
     e.target.value = "";
   };
 
