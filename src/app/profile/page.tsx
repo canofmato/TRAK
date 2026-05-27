@@ -91,12 +91,12 @@ export default function ProfilePage() {
         </div>
 
         {/* content */}
-        <section className="w-full h-[800px] lg:h-[600px] flex items-center p-10 bg-white">
+        <section className="w-full lg:h-[600px] flex items-center p-10 bg-white">
           <div className="w-full h-full flex flex-col items-end justify-between border border-2 border-dashed border-dark">
             {/* 프로필 */}
             <div className="w-full flex items-center justify-between p-6 border-b-2 border-dashed border-dark">
               <div className="flex items-center gap-4">
-                <div className="w-[100px] h-[100px] rounded-full bg-light overflow-hidden shrink-0">
+                <div className="w-[100px] h-[100px] rounded-full border border-light bg-light overflow-hidden shrink-0">
                   {profile?.avatar_url ? (
                     <img
                       src={profile.avatar_url}
@@ -132,7 +132,18 @@ export default function ProfilePage() {
 
             {/* 여행 카드 */}
             <div className="w-full flex flex-col px-6 py-5">
-              <h2 className="text-black font-semibold text-subtitle-md">My Travel</h2>
+              <div className="w-full flex items-center justify-between">
+                <h2 className="text-black font-semibold text-subtitle-md">My Travel</h2>
+                <Button
+                  type="button"
+                  variant="primary"
+                  sizeVariant="sm"
+                  onClick={() => router.push(`/create`)}
+                >
+                  아카이브 만들기
+                </Button>
+              </div>
+              
               {trips.length === 0 ? (
                 <div className="w-full flex flex-col items-center justify-center gap-4 py-10">
                   <p className="text-body text-gray-300">여행 아카이브가 없습니다.</p>
