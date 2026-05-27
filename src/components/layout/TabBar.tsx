@@ -2,7 +2,7 @@
 
 import { useTabStore } from "@/store/tabStore";
 import type { TripTab } from "@/types/trip"
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import Link from "next/link";
 
@@ -109,22 +109,29 @@ function MoreTab() {
 
 export function TabBar() {
   const { tabs, activeSlug } = useTabStore();
+  const pathname = usePathname();
   const total = tabs.length + 1;
+
+  const isProfilePage = pathname.startsWith(`/profile`);
 
   return (
     <nav aria-label="고정된 여행 탭" style={{ clipPath: 'inset(-20px -20px 0px -20px)' }}>
       <ol className="flex items-end lg:w-[1340px]">
         <DefaultTab index={0} total={total} />
-        {tabs.map((tab, i) => (
-          <TabItem
-            key={tab.tripSlug}
-            tab={tab}
-            isActive={tab.tripSlug === activeSlug}
-            index={i + 1}
-            total={total}
-          />
-        ))}
-        <MoreTab />
+        {!isProfilePage && (
+          <>
+            {tabs.map((tab, i) => (
+              <TabItem
+                key={tab.tripSlug}
+                tab={tab}
+                isActive={tab.tripSlug === activeSlug}
+                index={i + 1}
+                total={total}
+              />
+            ))}
+            <MoreTab />
+          </>
+        )}
       </ol>
     </nav>
   )
