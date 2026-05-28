@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { LuUpload } from "react-icons/lu";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { supabase } from "@/lib/supabaseClient";
+import { convertIfHeic } from "@/lib/convertHeic";
 
 type ImageUploadInputProps = {
   label?: string;
@@ -81,24 +82,20 @@ export default function ImageUploadInput({
   };
 
   // 💡 파일 선택 시 발동하는 핸들러
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // 1. 화면단 임시 미리보기 생성
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.files?.[0];
+    if (!raw) return;
 
-      // 2. 진짜 스토리지 서버 업로드 프로세스 시작
-      uploadImageToStorage(file);
-    }
+    // ✅ HEIC 변환
+    const file = await convertIfHeic(raw);
 
-    // 💡 3. react-hook-form의 원래 onChange가 있다면 작동하도록 실행해 줍니다.
-    if (register?.onChange) {
-      register.onChange(e);
-    }
+    const reader = new FileReader();
+    reader.onloadend = () => setPreviewUrl(reader.result as string);
+    reader.readAsDataURL(file);
+
+    uploadImageToStorage(file);
+
+    if (register?.onChange) register.onChange(e);
   };
 
   // 💡 Delete 버튼 클릭 핸들러 (원래 UI 버튼 기능 연동 및 부모 리셋)

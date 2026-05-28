@@ -13,6 +13,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LuPlus, LuX } from "react-icons/lu";
 import type { PhotoFolder } from "@/types/database.types";
+import { convertIfHeic } from "@/lib/convertHeic";
 
 const MAX_PHOTOS = 30;
 
@@ -191,18 +192,21 @@ export default function EditFolderPage() {
   };
 
   // ✅ 새 사진 추가
-  const handleNewPhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
+  const handleNewPhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+   const rawFiles = Array.from(e.target.files ?? []);
     const remaining = MAX_PHOTOS - totalPhotoCount;
 
-    if (files.length > remaining) {
+    if (rawFiles.length > remaining) {
       alert(`사진은 최대 ${MAX_PHOTOS}장까지 업로드할 수 있어요.`);
     }
 
-    const allowed = files.slice(0, remaining);
-    const newPreviews = allowed.map((f) => URL.createObjectURL(f));
+    const rawAllowed = rawFiles.slice(0, remaining);
 
-    setNewPhotos((prev) => [...prev, ...allowed]);
+    // ✅ HEIC 변환
+    const convertedFiles = await Promise.all(rawAllowed.map(convertIfHeic));
+    const newPreviews = convertedFiles.map((f) => URL.createObjectURL(f));
+
+    setNewPhotos((prev) => [...prev, ...convertedFiles]);
     setNewPhotoPreviews((prev) => [...prev, ...newPreviews]);
     e.target.value = "";
   };

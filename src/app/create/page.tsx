@@ -13,6 +13,7 @@ import HashtagInput from "@/components/common/HashtagInput";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { geocodeLocation } from "@/lib/geocode";
 
 interface CreateTripFormValues {
   title: string;
@@ -76,13 +77,23 @@ export default function CreatePage() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user) {
-        alert("로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
         router.push("/login");
         return;
       }
 
       // 2. 제목 기반 slug 생성
       const tripSlug = generateSlug(data.title);
+
+      // ✅ location → 좌표 변환
+      let latitude = null
+      let longitude = null
+      if (data.location) {
+        const coords = await geocodeLocation(data.location)
+        if (coords) {
+          latitude = coords.lat
+          longitude = coords.lng
+        }
+      }
 
       // 3. Supabase 'trips' 테이블에 데이터 꽂아넣기 🚀
       const { data: insertedData, error: insertError } = await supabase
@@ -98,8 +109,8 @@ export default function CreatePage() {
           cover_image_url: coverImageUrl || null, // 업로드된 이미지 URL
           color: dropdownValue || null,          // ColorPalette 컴포넌트 hex 값 바인딩
           hashtags: hashtags,                    // text[] 배열 타입 그대로 바인딩
-          latitude: 37.5665,                     // 💡 추후 Places Autocomplete 연동 시 동적 데이터로 교체
-          longitude: 126.9780,                   // 💡 추후 Places Autocomplete 연동 시 동적 데이터로 교체
+          latitude,                     // 💡 추후 Places Autocomplete 연동 시 동적 데이터로 교체
+          longitude,                  // 💡 추후 Places Autocomplete 연동 시 동적 데이터로 교체
         })
         .select()
         .single();

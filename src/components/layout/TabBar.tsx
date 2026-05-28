@@ -17,7 +17,7 @@ const TAB_STYLES = {
   clipPath: 'polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)',
 } as const;
 
-const TAB_SIZE_CLASSES = "w-[140px] h-[35px] lg:w-[260px] lg:h-[60px]";
+const TAB_SIZE_CLASSES = "shrink-0 w-[120px] h-[40px] md:w-[180px] md:h-[50px] lg:w-[260px] lg:h-[60px]";
 
 const TAB_SHADOW_STYLES = {
   filter: 'drop-shadow(4px 0px 4px rgba(0,0,0,0.25))',
@@ -38,7 +38,7 @@ function TabItem({ tab, isActive, index, total }: TabItemProps) {
   };
 
   return (
-    <li className="-ml-3 first:ml-0" style={{ zIndex: isActive ? total + 1 : total - index }}>
+    <li className="-ml-[48px] md:-ml-[72px] lg:-ml-[104px]" style={{ zIndex: isActive ? total + 1 : total - index }}>
       <div style={TAB_SHADOW_STYLES}>
         <div
           role="button"
@@ -90,7 +90,7 @@ function DefaultTab({index, total }: { index: number; total: number }) {
 
 function MoreTab() {
   return (
-    <li className="-ml-6 lg:-ml-12" style={{ zIndex: 0 }} >
+    <li className="-ml-[48px] md:-ml-[72px] lg:-ml-[104px]" style={{ zIndex: 0 }} >
       <div style={TAB_SHADOW_STYLES}>
         <Link
           href="/profile"
@@ -115,7 +115,7 @@ export function TabBar() {
   const isProfilePage = pathname.startsWith(`/profile`);
 
   return (
-    <nav aria-label="고정된 여행 탭" style={{ clipPath: 'inset(-20px -20px 0px -20px)' }}>
+    <nav aria-label="고정된 여행 탭" className="overflow-hidden" style={{ clipPath: 'inset(-20px -20px 0px -20px)' }}>
       <ol className="flex items-end lg:w-[1340px]">
         <DefaultTab index={0} total={total} />
         {!isProfilePage && (
