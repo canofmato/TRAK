@@ -23,13 +23,13 @@ interface CreateTripFormValues {
   description: string;
 }
 
-function FormButtons({ isLoading, onCancel }: { isLoading: boolean; onCancel: () => void }) {
+function FormButtons({ isLoading, isActive, onCancel }: { isLoading: boolean; isActive: boolean; onCancel: () => void }) {
   return (
     <div className="flex w-full items-center justify-between gap-6 ">
       <Button type="button" variant="outlined" sizeVariant="sm" className="shrink-0" onClick={onCancel}>
         취소
       </Button>
-      <Button type="submit" variant="filled" sizeVariant="md">
+      <Button type="submit" variant="filled" sizeVariant="md" disabled={!isActive || isLoading} isActive={isActive}>
         {isLoading ? "생성 중..." : "아카이브 만들기"}
       </Button>
     </div>
@@ -63,7 +63,7 @@ export default function CreatePage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CreateTripFormValues>({
     mode: "onChange"
   });
@@ -233,12 +233,12 @@ export default function CreatePage() {
                     register={register("description")}
                   />
                   <div className="hidden lg:block w-full">
-                    <FormButtons isLoading={isLoading} onCancel={() => router.push('/main')}/>
+                    <FormButtons isLoading={isLoading} isActive={isValid} onCancel={() => router.push('/main')}/>
                   </div>
                 </div>
               </div>
               <div className="block lg:hidden w-full">
-                <FormButtons isLoading={isLoading} onCancel={() => router.push(`/main`)}/>
+                <FormButtons isLoading={isLoading} isActive={isValid} onCancel={() => router.push(`/main`)}/>
               </div>
               
             </form>
