@@ -36,13 +36,13 @@ const generateSlug = (title: string) => {
 };
 
 
-function FormButtons({ isLoading, onCancel }: { isLoading: boolean; onCancel: () => void}) {
+function FormButtons({ isLoading, isActive, onCancel }: { isLoading: boolean; isActive: boolean; onCancel: () => void}) {
   return (
     <div className="flex w-full items-center justify-between gap-6 ">
       <Button type="button" variant="outlined" sizeVariant="sm" className="shrink-0" onClick={onCancel}>
         취소
       </Button>
-      <Button type="submit" variant="filled" sizeVariant="md">
+      <Button type="submit" variant="filled" sizeVariant="md" disabled={!isActive || isLoading} isActive={isActive}>
         {isLoading ? "생성 중..." : "폴더 만들기"}
       </Button>
     </div>
@@ -68,7 +68,7 @@ export default function CreateFolderPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<CreateFolderFormValues>({
     mode: "onChange"
   });
@@ -281,6 +281,7 @@ export default function CreateFolderPage() {
                   <div className="hidden lg:block w-full">
                     <FormButtons 
                       isLoading={isLoading}
+                      isActive={isValid}
                       onCancel={() => router.push(`/trip/${tripSlug}`)}
                     />
                   </div>
@@ -289,6 +290,7 @@ export default function CreateFolderPage() {
               <div className="block lg:hidden w-full">
                 <FormButtons
                   isLoading={isLoading}
+                  isActive={isValid}
                   onCancel={() => router.push(`/trip/${tripSlug}`)}
                 />
               </div>
