@@ -10,6 +10,7 @@ interface TripCardProps {
 
 export default function TripCard({ trip, photoCount = 0 }: TripCardProps) {
   const tags = trip.hashtags || [];
+  const hasCoordinates = trip.latitude != null && trip.longitude != null;
 
   return (
     <article className="w-full h-full flex-1 bg-white flex gap-10">
@@ -24,7 +25,7 @@ export default function TripCard({ trip, photoCount = 0 }: TripCardProps) {
            <div className="flex flex-col items-center justify-between">
             <p className="font-base">MAP</p>
             <Link
-              href={`/map${trip.latitude && trip.longitude
+              href={`/map${hasCoordinates
               ? `?lat=${trip.latitude}&lng=${trip.longitude}`
               : ''
             }`}

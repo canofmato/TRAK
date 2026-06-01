@@ -25,12 +25,15 @@ function MapContent() {
   const [isLoading, setIsLoading] = useState(true)
 
   // ✅ 쿼리 파라미터에서 좌표 읽기
-  const lat = searchParams.get('lat')
-  const lng = searchParams.get('lng')
-  const initialCenter = lat && lng
-    ? { lat: parseFloat(lat), lng: parseFloat(lng) }
+  const latParam = searchParams.get('lat')
+  const lngParam = searchParams.get('lng')
+  const lat = latParam == null ? NaN : Number(latParam)
+  const lng = lngParam == null ? NaN : Number(lngParam)
+  const hasValidCenter = Number.isFinite(lat) && Number.isFinite(lng)
+  const initialCenter = hasValidCenter
+    ? { lat, lng }
     : { lat: 36.5, lng: 127.5 }
-  const initialZoom = lat && lng ? 8 : 5
+  const initialZoom = hasValidCenter ? 8 : 5
 
 
   useEffect(() => {
@@ -65,7 +68,12 @@ function MapContent() {
     <div className="w-full h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-        <MapComponent trips={trips} onTripClick={(slug) => router.push(`/trip/${slug}`)} />
+        <MapComponent
+          trips={trips}
+          onTripClick={(slug) => router.push(`/trip/${slug}`)}
+          center={initialCenter}
+          zoom={initialZoom}
+        />
       </main>
       <Footer />
     </div>
