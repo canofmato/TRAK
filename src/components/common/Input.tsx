@@ -69,7 +69,7 @@ export default function Input({
             id={id ?? name}
             type={isPasswordType && showPassword ? "text" : type}
             placeholder={placeholder}
-            className={twMerge(baseStyle, hasError && 'border-red bg-red/20')}
+            className={twMerge(baseStyle, hasError && 'border-red bg-red/20 focus:border-red focus:bg-red/20')}
             {...register}
             {...rest}
           />
@@ -85,7 +85,7 @@ export default function Input({
           </span>
         )}
       </div>
-      {hasError && <p className="text-caption text-error" role="alert">{errorMessage}</p>}
+      {hasError && <p className="text-caption text-red" role="alert">{errorMessage}</p>}
     </div>
   )
 }

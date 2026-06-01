@@ -47,6 +47,7 @@ export default function TripPage() {
             title: tripData.title,
             color: tripData.color ?? '#D7E8F8',
             coverImageUrl: tripData.cover_image_url ?? null,
+            userId: tripData.user_id,
           })
 
           // [B] 해당 여행의 폴더 목록 가져오기

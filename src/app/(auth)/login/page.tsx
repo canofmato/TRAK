@@ -20,21 +20,17 @@ export default function LoginPage() {
     const {
       register,
       handleSubmit,
-      watch,
-      formState: { errors},
+      formState: { errors, isValid},
     } = useForm<LoginFormValues>({
       mode: "onChange",
     });
 
-    // 두 필드 모두 입력됐는지 감지
-    const watchedFields = watch(["email", "password"]);
-    const isComplete = watchedFields.every((v) => v && v.trim() !== "");
     const router = useRouter();
     
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
         setIsLoading(true);
         
-        const { data: loginData, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email: data.email,
           password: data.password,
         });
@@ -53,7 +49,7 @@ export default function LoginPage() {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            redirectTo: `${window.location.origin}/test`,
+            redirectTo: `${window.location.origin}/auth/callback`,
           },
         });
         if (error) alert(`구글 로그인 실패: ${error.message}`);
@@ -116,8 +112,8 @@ export default function LoginPage() {
                 type="submit"
                 variant="primary"
                 sizeVariant="lg"
-                disabled={isLoading}
-                isActive={isComplete}
+                disabled={isLoading || !isValid}
+                isActive={isValid}
               >
                 로그인
               </Button>

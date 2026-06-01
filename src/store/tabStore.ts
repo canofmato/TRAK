@@ -7,9 +7,12 @@ const MAX_TABS = 4;
 interface TabState {
   tabs: TripTab[];
   activeSlug: string | null;
+  activeUserId: string | null;
+  setActiveUser: (userId: string | null) => void;
   pinTab: (trip: TripTab) => void;
   removeTab: (tripSlug: string) => void;
   setActive: (tripSlug: string) => void;
+  clearTabs: () => void;
 }
 
 export const useTabStore = create<TabState>() (
@@ -17,6 +20,17 @@ export const useTabStore = create<TabState>() (
     (set) => ({
       tabs: [],
       activeSlug: null,
+      activeUserId: null,
+
+      setActiveUser: (userId) =>
+        set((state) => {
+          const tabs = state.tabs.filter((tab) => tab.userId === userId)
+          const activeSlug = tabs.some((tab) => tab.tripSlug === state.activeSlug)
+            ? state.activeSlug
+            : null
+
+          return { activeUserId: userId, tabs, activeSlug }
+        }),
 
       pinTab: (trip) =>
         set((state) => {
@@ -50,7 +64,21 @@ export const useTabStore = create<TabState>() (
         }),
 
       setActive: (tripSlug) => set({ activeSlug: tripSlug }),
+
+      clearTabs: () => set({ tabs: [], activeSlug: null }),
     }),
-    { name: 'trak-tabs' }
+    {
+      name: 'trak-tabs',
+      version: 1,
+      migrate: (persistedState) => {
+        const state = persistedState as Partial<TabState>
+        return {
+          ...state,
+          tabs: [],
+          activeSlug: null,
+          activeUserId: null,
+        }
+      },
+    }
   )
 )

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto, Noto_Sans_KR, Archivo_Black } from "next/font/google";
+import AuthStateBridge from "@/components/layout/AuthStateBridge";
 import "./globals.css"
 
 const roboto = Roboto({
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" className={`${roboto.variable} ${notoIsansKr.variable} ${archivoBlack.variable} antialiased`}>
       {/* 한글은 Noto Sans를 기본으로, 영문/숫자는 Roboto를 우선 적용 */}
       <body className="font-roboto antialiased"> 
+        <AuthStateBridge />
         {children}
       </body>
     </html>

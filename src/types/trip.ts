@@ -3,4 +3,5 @@ export interface TripTab {
   title: string;
   color: string;
   coverImageUrl: string | null;
+  userId: string;
 }

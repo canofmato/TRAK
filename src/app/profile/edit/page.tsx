@@ -61,10 +61,6 @@ export default function ProfileEditPage() {
     ? hasChanges(profile, watchedValues, avatarUrl)
     : false;
 
-  console.log("isChanged:", isChanged)
-  console.log("original avatar:", profile?.avatar_url)
-  console.log("current avatar:", avatarUrl)
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -164,7 +160,6 @@ export default function ProfileEditPage() {
   };
 
   const handleAvatarUpload = (url: string) => {
-    console.log("업로드된 URL:", url) // ✅ 확인용
     setAvatarUrl(url)
   }
 
@@ -262,9 +257,10 @@ export default function ProfileEditPage() {
                 ">
                   <Button
                     type="submit"
-                    variant="outlined"
+                    variant="filled"
                     sizeVariant="sm"
                     disabled={!isChanged || isSaving}
+                    isActive={isChanged}
                     className="disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     수정하기

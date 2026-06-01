@@ -178,6 +178,7 @@ export default function EditTripPage() {
         title: data.title,
         color: dropdownValue || "#D7E8F8",
         coverImageUrl: coverImageUrl || null,
+        userId: user.id,
       });
 
       router.push(`/trip/${newSlug}`);
