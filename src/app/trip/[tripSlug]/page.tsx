@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useTabStore } from "@/store/tabStore";
 import MoreDropdown from "@/components/Page/trip/MoreDropdown";
+import Loading from "@/components/common/Loading";
 
 export default function TripPage() {
   const params = useParams();
@@ -86,7 +87,7 @@ export default function TripPage() {
 
   // 로딩 및 데이터 없을 때의 예외 처리
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+    return <Loading />;
   }
   if (!trip) {
     return <div className="w-full h-screen flex items-center justify-center">데이터를 찾을 수 없습니다.</div>;

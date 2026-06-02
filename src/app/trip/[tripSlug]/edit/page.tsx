@@ -15,6 +15,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useForm, SubmitHandler } from "react-hook-form";
 import type { Trip } from "@/types/database.types";
 import { useTabStore } from "@/store/tabStore";
+import Loading from "@/components/common/Loading";
 
 interface EditTripFormValues {
   title: string;
@@ -191,7 +192,7 @@ export default function EditTripPage() {
   };
 
   if (isFetching) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+    return <Loading />;
   }
 
   return (

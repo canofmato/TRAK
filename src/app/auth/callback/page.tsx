@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import Loading from "@/components/common/Loading";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -22,9 +23,5 @@ export default function AuthCallbackPage() {
     finishOAuthLogin();
   }, [router]);
 
-  return (
-    <div className="w-full h-screen flex items-center justify-center">
-      로그인 처리 중...
-    </div>
-  );
+  return <Loading label="로그인 처리 중" />;
 }

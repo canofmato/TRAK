@@ -14,6 +14,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { LuPlus, LuX } from "react-icons/lu";
 import type { PhotoFolder } from "@/types/database.types";
 import { convertIfHeic } from "@/lib/convertHeic";
+import Loading from "@/components/common/Loading";
 
 const MAX_PHOTOS = 30;
 
@@ -294,7 +295,7 @@ export default function EditFolderPage() {
   };
 
   if (isFetching) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+    return <Loading />;
   }
 
   return (

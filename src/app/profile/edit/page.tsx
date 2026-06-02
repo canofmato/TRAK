@@ -12,6 +12,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import AvatarUpload from "@/components/profile/AvatarUpload";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
+import Loading from "@/components/common/Loading";
 interface Profile {
   id: string;
   nickname: string | null;
@@ -164,7 +165,7 @@ export default function ProfileEditPage() {
   }
 
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+    return <Loading />;
   }
 
 

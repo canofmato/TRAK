@@ -10,6 +10,7 @@ import { supabase } from "@/lib/supabaseClient";
 import Button from "@/components/common/Button";
 import Link from "next/link";
 import AuthConfirmModal from "@/components/profile/AuthConfirmModal";
+import Loading from "@/components/common/Loading";
 
 interface Profile {
   id: string;
@@ -75,7 +76,7 @@ export default function ProfilePage() {
   };
 
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+    return <Loading />;
   }
 
 

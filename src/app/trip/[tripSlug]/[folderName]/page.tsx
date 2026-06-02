@@ -8,6 +8,7 @@ import { PhotoFolder, Photo, Trip } from "@/types/database.types";
 import { supabase } from "@/lib/supabaseClient";
 import FolderMoreDropdown from "@/components/Page/trip/FolderMoreDropdown";
 import Link from "next/link";
+import Loading from "@/components/common/Loading";
 import { Footer } from "@/components/layout/Footer";
 
 export default function FolderPage() {
@@ -71,7 +72,7 @@ export default function FolderPage() {
   }, [tripSlug, folderName])
 
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>
+    return <Loading />
   }
 
   if (!folder || !trip) {
