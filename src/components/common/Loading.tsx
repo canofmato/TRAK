@@ -17,7 +17,7 @@ const FOLDERS = [
 function FolderGlyph({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`h-full w-full bg-[url('/folder-loading.png')] bg-contain bg-center bg-no-repeat ${className}`}
+      className={`h-full w-full bg-[url('/folder-loading.svg')] bg-contain bg-center bg-no-repeat ${className}`}
     />
   );
 }
