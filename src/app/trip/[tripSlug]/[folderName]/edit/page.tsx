@@ -15,6 +15,8 @@ import { LuPlus, LuX } from "react-icons/lu";
 import type { PhotoFolder } from "@/types/database.types";
 import { convertIfHeic } from "@/lib/convertHeic";
 import Loading from "@/components/common/Loading";
+import Toast from "@/components/common/Toast";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const MAX_PHOTOS = 30;
 
@@ -89,6 +91,8 @@ export default function EditFolderPage() {
   const [isFetching, setIsFetching] = useState(true);
   const [folderId, setFolderId] = useState<string>("");
   const [tripId, setTripId] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const [colorValue, setColorValue] = useState<string>("")
   const [colorId, setColorId] = useState<string>("");
@@ -122,6 +126,15 @@ export default function EditFolderPage() {
     : false;
 
   const totalPhotoCount = existingPhotos.length - deletedPhotoIds.length + newPhotos.length;
+
+  const handleCancel = () => {
+    if (isChanged) {
+      setIsCancelModalOpen(true);
+      return;
+    }
+
+    router.back();
+  };
 
   // ✅ 마운트 시 기존 데이터 fetch
   useEffect(() => {
@@ -198,7 +211,7 @@ export default function EditFolderPage() {
     const remaining = MAX_PHOTOS - totalPhotoCount;
 
     if (rawFiles.length > remaining) {
-      alert(`사진은 최대 ${MAX_PHOTOS}장까지 업로드할 수 있어요.`);
+      setToastMessage(`사진은 최대 ${MAX_PHOTOS}장까지 업로드할 수 있어요.`);
     }
 
     const rawAllowed = rawFiles.slice(0, remaining);
@@ -288,7 +301,7 @@ export default function EditFolderPage() {
 
     } catch (error) {
       console.error("폴더 수정 실패:", error);
-      alert("폴더 수정에 실패했습니다.");
+      setToastMessage("폴더 수정에 실패했습니다.");
     } finally {
       setIsLoading(false);
     }
@@ -300,6 +313,21 @@ export default function EditFolderPage() {
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
+      {toastMessage && (
+        <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+          <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+        </div>
+      )}
+      {isCancelModalOpen && (
+        <ConfirmModal
+          title="수정을 취소하시겠습니까?"
+          description="변경된 내용은 저장되지 않습니다."
+          confirmLabel="나가기"
+          confirmVariant="filled"
+          onConfirm={() => router.back()}
+          onCancel={() => setIsCancelModalOpen(false)}
+        />
+      )}
       <Header/>
       <main  className="w-full flex-1 flex flex-col px-[40px] lg:px-[70px] py-[70px] items-center">
         <div className="w-full z-10">
@@ -419,7 +447,7 @@ export default function EditFolderPage() {
                     <FormButtons 
                       isLoading={isLoading}
                       isChanged={isChanged}
-                      onCancel={() => router.push(`/trip/${tripSlug}/${folderName}`)}
+                      onCancel={handleCancel}
                     />
                   </div>
                 </div>
@@ -428,7 +456,7 @@ export default function EditFolderPage() {
                 <FormButtons
                   isLoading={isLoading}
                   isChanged={isChanged}
-                  onCancel={() => router.push(`/trip/${tripSlug}/${folderName}`)}
+                  onCancel={handleCancel}
                 />
               </div>
               

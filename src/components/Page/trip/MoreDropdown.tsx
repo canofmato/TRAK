@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import More from "@/assets/icons/More.svg";
 import Button from "@/components/common/Button"
-import DeleteConfirmModal from "@/components/Page/trip/DeleteConfirmModal";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 interface MoreDropdownProps {
   tripId: string;
@@ -95,14 +95,15 @@ export default function MoreDropdown({ tripId, tripSlug }: MoreDropdownProps) {
       </div>
 
       {isModalOpen && (
-        <DeleteConfirmModal
-          isDeleting={isDeleting}
+        <ConfirmModal
+          isLoading={isDeleting}
           onConfirm={handleDeleteConfirm}
           onCancel={() => setIsModalOpen(false)}
-          message={{
-            title: '여행을 삭제하시겠습니까?',
-            description: '삭제된 여행은 다시 되돌릴 수 없습니다.',
-          }}
+          title="여행을 삭제하시겠습니까?"
+          description="삭제된 여행은 다시 되돌릴 수 없습니다."
+          confirmLabel="삭제"
+          loadingLabel="삭제 중..."
+          confirmVariant="delete"
         />
       )}
     </>

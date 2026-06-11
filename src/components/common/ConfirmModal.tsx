@@ -2,38 +2,43 @@
 
 import Button from "@/components/common/Button";
 
-interface AuthConfimModalProps {
-  isDeleting: boolean;
+type ConfirmVariant = "primary" | "filled" | "outlined" | "delete";
+
+interface ConfirmModalProps {
+  isLoading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  message: { 
-    title?: string
-    description?: string
-  }
-  confirmLabel? :string
+  title?: string;
+  description?: string;
+  cancelLabel?: string;
+  confirmLabel?: string;
+  loadingLabel?: string;
+  confirmVariant?: ConfirmVariant;
 }
 
-export default function AuthConfirmModal({
-  isDeleting,
+export default function ConfirmModal({
+  isLoading = false,
   onConfirm,
   onCancel,
-  message, 
-  confirmLabel = '확인',
-}: AuthConfimModalProps) {
-
+  title,
+  description,
+  cancelLabel = "취소",
+  confirmLabel = "확인",
+  loadingLabel,
+  confirmVariant = "filled",
+}: ConfirmModalProps) {
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
       onClick={onCancel}
     >
-      {/* 모달 */}
       <div
         className="rounded-[10px] px-3 py-5 bg-white flex flex-col items-center justify-center gap-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col items-center text-center">
-          <p className="text-subtitle-md text-black">{message.title}</p>
-          <p className="text-body text-gray-300">{message.description}</p>
+          <p className="text-subtitle-md text-black">{title}</p>
+          <p className="text-body text-gray-300">{description}</p>
         </div>
 
         <div className="flex gap-2">
@@ -42,15 +47,15 @@ export default function AuthConfirmModal({
             onClick={onCancel}
             className="w-[150px]"
           >
-            취소
+            {cancelLabel}
           </Button>
           <Button
-            variant="delete"
+            variant={confirmVariant}
             onClick={onConfirm}
-            disabled={isDeleting}
+            disabled={isLoading}
             className="w-[150px]"
           >
-            {isDeleting ? `${confirmLabel} 중 ...` : confirmLabel}
+            {isLoading ? loadingLabel ?? `${confirmLabel} 중...` : confirmLabel}
           </Button>
         </div>
       </div>

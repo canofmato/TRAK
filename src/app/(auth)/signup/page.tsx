@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import Button from "@/components/common/Button";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import Toast from "@/components/common/Toast";
 
 interface SignupFormValues {
   nickname: string;
@@ -19,6 +20,7 @@ export default function SignupPage() {
   //회원가입 진행 중
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -101,7 +103,7 @@ export default function SignupPage() {
         return;
       }
     } catch {
-      alert("이메일 중복 확인 중 문제가 발생했습니다.");
+      setToastMessage("이메일 중복 확인 중 문제가 발생했습니다.");
       setIsLoading(false);
       return;
     }
@@ -121,11 +123,13 @@ export default function SignupPage() {
     setIsLoading(false);
 
     if (error) {
-      alert(`회원가입 실패... ❌ \n에러 내용: ${error.message}`);
+      setToastMessage(`회원가입 실패... ${error.message}`);
     } else {
-      alert("회원가입 요청 성공! 🎉 \n이메일 인증 링크가 발송되었습니다. (인프라 설정에 따라 바로 로그인될 수도 있어요!)");
+      setToastMessage("회원가입 요청 성공 🎉 이메일 인증 링크가 발송되었습니다.");
       console.log("가입 성공 데이터:", signUpData);
-      router.push("/login");
+      window.setTimeout(() => {
+        router.push("/login");
+      }, 1200);
     }
   };
 
@@ -137,11 +141,17 @@ export default function SignupPage() {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-    if (error) alert(`구글 로그인 실패: ${error.message}`);
+    if (error) setToastMessage(`구글 로그인 실패: ${error.message}`);
   }
 
   return (
     <div className="flex flex-col w-full font-roboto text-black justify-center gap-10">
+      {toastMessage && (
+        <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+          <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+        </div>
+      )}
+
       {/* 타이틀 */}
       <div className="flex flex-col items-start gap-1">
         <h1 className="text-subtitle-lg font-bold">회원가입</h1>

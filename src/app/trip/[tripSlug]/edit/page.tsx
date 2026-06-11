@@ -16,6 +16,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import type { Trip } from "@/types/database.types";
 import { useTabStore } from "@/store/tabStore";
 import Loading from "@/components/common/Loading";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 interface EditTripFormValues {
   title: string;
@@ -88,6 +89,7 @@ export default function EditTripPage() {
   const [coverImageUrl, setCoverImageUrl] = useState<string>("");
 
   const [snapshot, setSnapshot] = useState<Trip | null>(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const pinTab = useTabStore((state) => state.pinTab);
   const removeTab = useTabStore((state) => state.removeTab)
@@ -107,6 +109,15 @@ export default function EditTripPage() {
   const isChanged = snapshot
     ? hasChanges(snapshot, watchedValues, dropdownValue, coverImageUrl, hashtags)
     : false;
+
+  const handleCancel = () => {
+    if (isChanged) {
+      setIsCancelModalOpen(true);
+      return;
+    }
+
+    router.back();
+  };
   
     useEffect(()=> {
       if (!tripSlug) return;
@@ -197,6 +208,16 @@ export default function EditTripPage() {
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
+      {isCancelModalOpen && (
+        <ConfirmModal
+          title="수정을 취소하시겠습니까?"
+          description="변경된 내용은 저장되지 않습니다."
+          confirmLabel="나가기"
+          confirmVariant="filled"
+          onConfirm={() => router.back()}
+          onCancel={() => setIsCancelModalOpen(false)}
+        />
+      )}
       <Header/>
       <main  className="w-full flex-1 flex flex-col px-[40px] lg:px-[70px] py-[70px] items-center">
         <div className="w-full z-10">
@@ -295,7 +316,7 @@ export default function EditTripPage() {
                     <FormButtons 
                       isLoading={isLoading}
                       isChanged={isChanged}
-                      onCancel={() => router.push(`/trip/${tripSlug}`)}
+                      onCancel={handleCancel}
                     />
                   </div>
                 </div>
@@ -304,7 +325,7 @@ export default function EditTripPage() {
                 <FormButtons
                   isLoading={isLoading}
                   isChanged={isChanged}
-                  onCancel={() => router.push(`/trip/${tripSlug}`)}
+                  onCancel={handleCancel}
                 />
               </div>
               

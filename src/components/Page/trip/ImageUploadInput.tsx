@@ -6,6 +6,7 @@ import { LuUpload } from "react-icons/lu";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { supabase } from "@/lib/supabaseClient";
 import { convertIfHeic } from "@/lib/convertHeic";
+import Toast from "@/components/common/Toast";
 
 type ImageUploadInputProps = {
   label?: string;
@@ -27,6 +28,7 @@ export default function ImageUploadInput({
 }: ImageUploadInputProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl ?? null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -71,9 +73,9 @@ export default function ImageUploadInput({
 
     } catch (error) {
       if (error instanceof Error) {
-        alert(`이미지 업로드 실패... ❌ \n사유: ${error.message}`);
+        setToastMessage(`이미지 업로드 실패... ${error.message}`);
       } else {
-        alert("이미지 업로드 중 알 수 없는 에러가 발생했습니다.");
+        setToastMessage("이미지 업로드 중 알 수 없는 에러가 발생했습니다.");
       }
       setPreviewUrl(null); // 실패 시 미리보기 클리어
     } finally {
@@ -116,6 +118,11 @@ export default function ImageUploadInput({
 
   return (
     <div className={twMerge('flex flex-col gap-2 transition-all items-start w-full', className)}>
+      {toastMessage && (
+        <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+          <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+        </div>
+      )}
       <div className="flex items-end justify-between w-full">
         {label && (
           <label htmlFor={name} className="text-subtitle-md text-medium">
