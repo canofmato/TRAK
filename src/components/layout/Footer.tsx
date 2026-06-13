@@ -6,19 +6,19 @@ export function Footer() {
     <footer className="w-full h-[60px] px-[40px] lg:px-[70px] flex items-center justify-between border-t border-darker">
       <div className="flex gap-10 items-center">
         <Link
-          href="/terms"
+          href="/info#terms"
           className="text-body lg:text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
         >
           TERMS
         </Link>
         <Link
-          href="/blog"
+          href="/info#blog"
           className="text-body lg:text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
         >
           BLOG
         </Link>
         <Link
-          href="/contact"
+          href="/info#contact"
           className="text-body lg:text-subtitle-md font-semibold text-black hover:text-gray-400 transition-colors"
         >
           CONTACT
