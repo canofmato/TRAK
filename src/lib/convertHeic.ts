@@ -1,6 +1,3 @@
-import heic2any from "heic2any"
-import imageCompression from "browser-image-compression"
-
 export const convertIfHeic = async (file: File): Promise<File> => {
   const isHeic =
     file.type === 'image/heic' ||
@@ -13,6 +10,7 @@ export const convertIfHeic = async (file: File): Promise<File> => {
 
   try {
     // ✅ 방법 1: heic2any
+    const { default: heic2any } = await import("heic2any")
     const converted = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 })
     const blob = Array.isArray(converted) ? converted[0] : converted
     return new File(
@@ -23,6 +21,7 @@ export const convertIfHeic = async (file: File): Promise<File> => {
   } catch {
     try {
       // ✅ 방법 2: browser-image-compression (HEIC 자동 변환 지원)
+      const { default: imageCompression } = await import("browser-image-compression")
       const compressed = await imageCompression(file, {
         maxSizeMB: 5,
         fileType: 'image/jpeg',
@@ -35,7 +34,9 @@ export const convertIfHeic = async (file: File): Promise<File> => {
       )
     } catch (error) {
       console.warn('HEIC 변환 실패:', error)
-      alert('이 HEIC 파일은 지원되지 않아요. JPG나 PNG로 변환 후 업로드해주세요.')
+      if (typeof window !== 'undefined') {
+        window.alert('이 HEIC 파일은 지원되지 않아요. JPG나 PNG로 변환 후 업로드해주세요.')
+      }
       return file
     }
   }
