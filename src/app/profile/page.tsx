@@ -9,7 +9,8 @@ import { Trip } from "@/types/database.types";
 import { supabase } from "@/lib/supabaseClient";
 import Button from "@/components/common/Button";
 import Link from "next/link";
-import AuthConfirmModal from "@/components/profile/AuthConfirmModal";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import Loading from "@/components/common/Loading";
 
 interface Profile {
   id: string;
@@ -75,7 +76,7 @@ export default function ProfilePage() {
   };
 
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+    return <Loading />;
   }
 
 
@@ -203,15 +204,15 @@ export default function ProfilePage() {
 
       <Footer />
       {isLogoutModalOpen && (
-        <AuthConfirmModal
-          isDeleting={isLoggingOut}
+        <ConfirmModal
+          isLoading={isLoggingOut}
           onConfirm={handleLogout}
           onCancel={() => setIsLogoutModalOpen(false)}
-          message={{
-            title: '로그아웃 하시겠습니까?',
-            description: '언제든지 다시 로그인할 수 있어요.',
-          }}
+          title="로그아웃 하시겠습니까?"
+          description="언제든지 다시 로그인할 수 있어요."
           confirmLabel="로그아웃"
+          loadingLabel="로그아웃 중..."
+          confirmVariant="delete"
         />
       )}
     </div>

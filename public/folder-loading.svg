@@ -1,0 +1,24 @@
+<svg width="157" height="133" viewBox="0 0 157 133" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.2604 125.382H134.74C141.131 125.382 144.327 125.382 146.769 124.136C148.916 123.041 150.662 121.293 151.756 119.142C153 116.698 153 113.498 153 107.098V30.0282C153 23.6283 153 20.4284 151.756 17.984C150.662 15.8338 148.916 14.0857 146.769 12.9901C144.327 11.7446 141.131 11.7446 134.74 11.7446H73.0314C69.6234 11.7446 65.2644 11.4272 60.9846 8.17363C56.7048 4.92005 60.3505 7.69749 55.833 4.20585C51.3154 0.7142 49.0117 0 45.0543 0H22.2604C15.8687 0 12.6728 5.29756e-07 10.2315 1.24549C8.08403 2.34106 6.3381 4.0892 5.24392 6.23936C4 8.68378 4 11.8837 4 18.2835V107.098C4 113.498 4 116.698 5.24392 119.142C6.3381 121.293 8.08403 123.041 10.2315 124.136C12.6728 125.382 15.8687 125.382 22.2604 125.382Z" fill="#D7E8F8"/>
+<g filter="url(#filter0_di_254_43)">
+<rect x="4" y="28" width="149" height="105" rx="10" fill="#D7E8F8"/>
+</g>
+<defs>
+<filter id="filter0_di_254_43" x="0" y="20" width="157" height="113" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="-4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.35 0 0 0 0 0.35 0 0 0 0 0.35 0 0 0 0.5 0"/>
+<feBlend mode="multiply" in2="BackgroundImageFix" result="effect1_dropShadow_254_43"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_254_43" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="-4"/>
+<feGaussianBlur stdDeviation="8"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0.3 0"/>
+<feBlend mode="multiply" in2="shape" result="effect2_innerShadow_254_43"/>
+</filter>
+</defs>
+</svg>

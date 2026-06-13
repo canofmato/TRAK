@@ -14,6 +14,8 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { geocodeLocation } from "@/lib/geocode";
+import Toast from "@/components/common/Toast";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 interface CreateTripFormValues {
   title: string;
@@ -58,15 +60,28 @@ export default function CreatePage() {
   const [dropdownValue, setDropdownValue] = useState<string>("");
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [coverImageUrl, setCoverImageUrl] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm<CreateTripFormValues>({
     mode: "onChange"
   });
+
+  const hasDraft = isDirty || !!dropdownValue || hashtags.length > 0 || !!coverImageUrl;
+
+  const handleCancel = () => {
+    if (hasDraft) {
+      setIsCancelModalOpen(true);
+      return;
+    }
+
+    router.back();
+  };
 
   // 🔥 [핵심] 아카이브 생성 요청 (Supabase Insert)
   const onSubmit: SubmitHandler<CreateTripFormValues> = async (data) => {
@@ -119,17 +134,19 @@ export default function CreatePage() {
         throw insertError;
       }
 
-      alert("새로운 여행 아카이브가 성공적으로 만들어졌습니다! 🎉");
+      setToastMessage("새로운 여행 아카이브가 성공적으로 만들어졌습니다! 🎉");
       console.log("생성된 여행 데이터:", insertedData);
       
       // 성공 후 대시보드나 상세 페이지로 이동
-      router.push(`/trip/${tripSlug}`);
+      window.setTimeout(() => {
+        router.push(`/trip/${tripSlug}`);
+      }, 1000);
 
     } catch (error) {
       if (error instanceof Error) {
-        alert(`아카이브 생성 실패... ❌ \n사유: ${error.message}`);
+        setToastMessage(`아카이브 생성 실패... ${error.message}`);
       } else {
-        alert("알 수 없는 에러가 발생했습니다.");
+        setToastMessage("알 수 없는 에러가 발생했습니다.");
       }
       console.error(error);
     } finally {
@@ -139,6 +156,21 @@ export default function CreatePage() {
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
+      {toastMessage && (
+        <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+          <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+        </div>
+      )}
+      {isCancelModalOpen && (
+        <ConfirmModal
+          title="작성을 취소하시겠습니까?"
+          description="작성한 내용은 저장되지 않습니다."
+          confirmLabel="나가기"
+          confirmVariant="filled"
+          onConfirm={() => router.back()}
+          onCancel={() => setIsCancelModalOpen(false)}
+        />
+      )}
       <Header/>
       <main  className="w-full flex-1 flex flex-col px-[40px] lg:px-[70px] py-[70px] items-center">
         <div className="w-full z-10">
@@ -233,12 +265,12 @@ export default function CreatePage() {
                     register={register("description")}
                   />
                   <div className="hidden lg:block w-full">
-                    <FormButtons isLoading={isLoading} isActive={isValid} onCancel={() => router.push('/main')}/>
+                    <FormButtons isLoading={isLoading} isActive={isValid} onCancel={handleCancel}/>
                   </div>
                 </div>
               </div>
               <div className="block lg:hidden w-full">
-                <FormButtons isLoading={isLoading} isActive={isValid} onCancel={() => router.push(`/main`)}/>
+                <FormButtons isLoading={isLoading} isActive={isValid} onCancel={handleCancel}/>
               </div>
               
             </form>

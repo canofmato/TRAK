@@ -7,15 +7,12 @@ import { supabase } from '@/lib/supabaseClient'
 import { Trip } from '@/types/database.types'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import Loading from '@/components/common/Loading'
 
 // ✅ Leaflet은 SSR 불가 → dynamic import로 CSR만 렌더링
 const MapComponent = dynamic(() => import('@/components/map/MapComponent'), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-      지도 로딩 중... 🗺️
-    </div>
-  ),
+  loading: () => <Loading className="min-h-full h-full" label="지도 로딩 중" />,
 })
 
 function MapContent() {
@@ -61,7 +58,7 @@ function MapContent() {
   }, [])
 
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>
+    return <Loading />
   }
 
   return (
@@ -83,7 +80,7 @@ function MapContent() {
 export default function MapPage() {
   return (
     <Suspense fallback={
-      <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>
+      <Loading />
     }>
       <MapContent />
     </Suspense>

@@ -7,11 +7,13 @@ import { Header } from "@/components/layout/Header";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import AuthConfirmModal from "@/components/profile/AuthConfirmModal";
 import { useForm, SubmitHandler } from "react-hook-form";
 import AvatarUpload from "@/components/profile/AvatarUpload";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
+import Loading from "@/components/common/Loading";
+import Toast from "@/components/common/Toast";
+import ConfirmModal from "@/components/common/ConfirmModal";
 interface Profile {
   id: string;
   nickname: string | null;
@@ -45,7 +47,9 @@ export default function ProfileEditPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isCancellationModalOpen, setIsCancellationModalOpen] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -60,10 +64,6 @@ export default function ProfileEditPage() {
   const isChanged = profile
     ? hasChanges(profile, watchedValues, avatarUrl)
     : false;
-
-  console.log("isChanged:", isChanged)
-  console.log("original avatar:", profile?.avatar_url)
-  console.log("current avatar:", avatarUrl)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,7 +102,7 @@ export default function ProfileEditPage() {
   const onSubmit: SubmitHandler<ProfileEditFormValues> = async (data) => {
     // 비밀번호 유효성 검사
     if (data.password && data.password !== data.passwordConfirm) {
-      alert("비밀번호가 일치하지 않아요.");
+      setToastMessage("비밀번호가 일치하지 않아요.");
       return;
     }
 
@@ -133,7 +133,7 @@ export default function ProfileEditPage() {
       router.push("/profile");
     } catch (error) {
       console.error("프로필 수정 실패:", error);
-      alert("프로필 수정에 실패했습니다.");
+      setToastMessage("프로필 수정에 실패했습니다.");
     } finally {
       setIsSaving(false);
     }
@@ -164,17 +164,30 @@ export default function ProfileEditPage() {
   };
 
   const handleAvatarUpload = (url: string) => {
-    console.log("업로드된 URL:", url) // ✅ 확인용
     setAvatarUrl(url)
   }
 
+  const handleCancel = () => {
+    if (isChanged) {
+      setIsCancelModalOpen(true);
+      return;
+    }
+
+    router.back();
+  }
+
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>;
+    return <Loading />;
   }
 
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
+      {toastMessage && (
+        <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+          <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+        </div>
+      )}
       <Header />
 
       {/* main */}
@@ -260,15 +273,26 @@ export default function ProfileEditPage() {
                   flex flex-row items-center justify-between w-full
                   lg:flex-col lg:items-end lg:justify-between lg:w-auto lg:h-full lg:py-7
                 ">
-                  <Button
-                    type="submit"
-                    variant="outlined"
-                    sizeVariant="sm"
-                    disabled={!isChanged || isSaving}
-                    className="disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    수정하기
-                  </Button>
+                  <div className="flex flex-col items-end gap-3">
+                    <Button
+                      type="submit"
+                      variant="filled"
+                      sizeVariant="sm"
+                      disabled={!isChanged || isSaving}
+                      isActive={isChanged}
+                      className="disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      수정하기
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outlined"
+                      sizeVariant="sm"
+                      onClick={handleCancel}
+                    >
+                      취소
+                    </Button>
+                  </div>
                   <button
                     type="button"
                     onClick={() => setIsCancellationModalOpen(true)}
@@ -287,16 +311,26 @@ export default function ProfileEditPage() {
       </main>
 
       <Footer />
+      {isCancelModalOpen && (
+        <ConfirmModal
+          title="수정을 취소하시겠습니까?"
+          description="변경된 내용은 저장되지 않습니다."
+          confirmLabel="나가기"
+          confirmVariant="filled"
+          onConfirm={() => router.back()}
+          onCancel={() => setIsCancelModalOpen(false)}
+        />
+      )}
       {isCancellationModalOpen && (
-        <AuthConfirmModal
-          isDeleting={isWithdrawing}
+        <ConfirmModal
+          isLoading={isWithdrawing}
           onConfirm={handleWithdraw}
           onCancel={() => setIsCancellationModalOpen(false)}
-          message={{
-            title: '탈퇴 하시겠습니까?',
-            description: '탈퇴하면 계정을 다시 살릴 수 없습니다.',
-          }}
+          title="탈퇴 하시겠습니까?"
+          description="탈퇴하면 계정을 다시 살릴 수 없습니다."
           confirmLabel="탈퇴"
+          loadingLabel="탈퇴 중..."
+          confirmVariant="delete"
         />
       )}
     </div>

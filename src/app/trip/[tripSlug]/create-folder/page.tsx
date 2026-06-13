@@ -12,6 +12,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { LuPlus, LuX } from "react-icons/lu";
 import { convertIfHeic } from "@/lib/convertHeic";
+import Toast from "@/components/common/Toast";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 const MAX_PHOTOS = 30;
 
@@ -60,6 +62,8 @@ export default function CreateFolderPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [colorValue, setColorValue] = useState<string>("")
   const [colorId, setColorId] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   // ✅ 다중 사진 상태 관리
   const [photos, setPhotos] = useState<File[]>([]);
@@ -68,10 +72,21 @@ export default function CreateFolderPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm<CreateFolderFormValues>({
     mode: "onChange"
   });
+
+  const hasDraft = isDirty || photos.length > 0 || !!colorId;
+
+  const handleCancel = () => {
+    if (hasDraft) {
+      setIsCancelModalOpen(true);
+      return;
+    }
+
+    router.back();
+  };
 
   // ✅ 다중 사진 선택 핸들러 (최대 30장)
   const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +94,7 @@ export default function CreateFolderPage() {
     const remaining = MAX_PHOTOS - photos.length;
 
     if (rawFiles.length > remaining) {
-      alert(`사진은 최대 ${MAX_PHOTOS}장까지 업로드할 수 있어요.`);
+      setToastMessage(`사진은 최대 ${MAX_PHOTOS}장까지 업로드할 수 있어요.`);
     }
 
     const rawAllowed = rawFiles.slice(0, remaining);
@@ -104,7 +119,7 @@ export default function CreateFolderPage() {
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError || !user) {
-        alert("로그인 세션이 만료되었습니다.");
+        setToastMessage("로그인 세션이 만료되었습니다.");
         router.push("/login");
         return;
       }
@@ -170,9 +185,9 @@ export default function CreateFolderPage() {
 
     } catch (error) {
       if (error instanceof Error) {
-        alert(`폴더 생성 실패 ❌\n사유: ${error.message}`);
+        setToastMessage(`폴더 생성 실패... ${error.message}`);
       } else {
-        alert("알 수 없는 에러가 발생했습니다.");
+        setToastMessage("알 수 없는 에러가 발생했습니다.");
       }
       console.error(error);
     } finally {
@@ -182,6 +197,21 @@ export default function CreateFolderPage() {
 
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
+      {toastMessage && (
+        <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+          <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+        </div>
+      )}
+      {isCancelModalOpen && (
+        <ConfirmModal
+          title="작성을 취소하시겠습니까?"
+          description="작성한 내용은 저장되지 않습니다."
+          confirmLabel="나가기"
+          confirmVariant="filled"
+          onConfirm={() => router.back()}
+          onCancel={() => setIsCancelModalOpen(false)}
+        />
+      )}
       <Header/>
       <main  className="w-full flex-1 flex flex-col px-[40px] lg:px-[70px] py-[70px] items-center">
         <div className="w-full z-10">
@@ -282,7 +312,7 @@ export default function CreateFolderPage() {
                     <FormButtons 
                       isLoading={isLoading}
                       isActive={isValid}
-                      onCancel={() => router.push(`/trip/${tripSlug}`)}
+                      onCancel={handleCancel}
                     />
                   </div>
                 </div>
@@ -291,7 +321,7 @@ export default function CreateFolderPage() {
                 <FormButtons
                   isLoading={isLoading}
                   isActive={isValid}
-                  onCancel={() => router.push(`/trip/${tripSlug}`)}
+                  onCancel={handleCancel}
                 />
               </div>
               

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import More from "@/assets/icons/More-black.svg";
 import Button from "@/components/common/Button"
-import DeleteConfirmModal from "@/components/Page/trip/DeleteConfirmModal";
+import ConfirmModal from "@/components/common/ConfirmModal";
 
 interface MoreDropdownProps {
   folderId: string;
@@ -92,14 +92,15 @@ export default function FolderMoreDropdown({ folderId, tripSlug, folderSlug }: M
       </div>
 
       {isModalOpen && (
-        <DeleteConfirmModal
-          isDeleting={isDeleting}
+        <ConfirmModal
+          isLoading={isDeleting}
           onConfirm={handleDeleteConfirm}
           onCancel={() => setIsModalOpen(false)}
-          message={{
-            title: '폴더를 삭제하시겠습니까?',
-            description: '삭제된 폴더는 다시 되돌릴 수 없습니다.',
-          }}
+          title="폴더를 삭제하시겠습니까?"
+          description="삭제된 폴더는 다시 되돌릴 수 없습니다."
+          confirmLabel="삭제"
+          loadingLabel="삭제 중..."
+          confirmVariant="delete"
         />
       )}
     </>

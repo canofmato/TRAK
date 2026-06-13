@@ -65,6 +65,15 @@
   }
 }
 
+@keyframes trak-folder-pass {
+  0% {
+    transform: translate(-300px, -50%);
+  }
+  100% {
+    transform: translate(300px, -50%);
+  }
+}
+
 /* Leaflet Popup 스타일 커스텀 */
 .leaflet-popup-content {
   margin: 0 !important;

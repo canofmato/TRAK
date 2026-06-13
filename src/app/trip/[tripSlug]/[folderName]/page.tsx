@@ -8,6 +8,8 @@ import { PhotoFolder, Photo, Trip } from "@/types/database.types";
 import { supabase } from "@/lib/supabaseClient";
 import FolderMoreDropdown from "@/components/Page/trip/FolderMoreDropdown";
 import Link from "next/link";
+import Loading from "@/components/common/Loading";
+import { Footer } from "@/components/layout/Footer";
 
 export default function FolderPage() {
   const params = useParams();
@@ -20,7 +22,7 @@ export default function FolderPage() {
   const [trip, setTrip] = useState<Trip |null>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!tripSlug || !folderName) return;
@@ -70,7 +72,7 @@ export default function FolderPage() {
   }, [tripSlug, folderName])
 
   if (isLoading) {
-    return <div className="w-full h-screen flex items-center justify-center">로딩 중... ⏳</div>
+    return <Loading />
   }
 
   if (!folder || !trip) {
@@ -149,6 +151,7 @@ export default function FolderPage() {
           </div>
         </section>
       </main>
+      <Footer/>
     </div>
   )
 }

@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Input from "@/components/common/Input";
 import { FcGoogle } from "react-icons/fc";
 import Button from "@/components/common/Button";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
+import Toast from "@/components/common/Toast";
 
 interface SignupFormValues {
   nickname: string;
@@ -17,19 +19,97 @@ interface SignupFormValues {
 export default function SignupPage() {
   //회원가입 진행 중
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     watch,
+    setError,
+    clearErrors,
     formState: { errors, isValid},
   } = useForm<SignupFormValues>({
     mode: "onChange",
   });
 
+  const router = useRouter();
+  const emailValue = watch("email");
+  const passwordValue = watch("password");
+
+  const checkEmailExists = useCallback(async (email: string) => {
+    const { data, error } = await supabase.functions.invoke<{
+      exists: boolean;
+    }>("check-email-exists", {
+      body: { email },
+    });
+
+    if (error) throw error;
+
+    return data?.exists ?? false;
+  }, []);
+
+  useEffect(() => {
+    let isCancelled = false;
+    const normalizedEmail = emailValue?.trim();
+    const isEmailFormatValid = /^\S+@\S+$/i.test(normalizedEmail ?? "");
+
+    if (!normalizedEmail || !isEmailFormatValid) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(async () => {
+      setIsCheckingEmail(true);
+      try {
+        const exists = await checkEmailExists(normalizedEmail);
+
+        if (isCancelled) return;
+
+        if (exists) {
+          setError("email", {
+            type: "manual",
+            message: "이미 가입된 이메일입니다.",
+          });
+        } else {
+          clearErrors("email");
+        }
+      } catch (error) {
+        if (isCancelled) return;
+        console.error("이메일 중복 확인 실패:", error);
+      } finally {
+        if (isCancelled) return;
+        setIsCheckingEmail(false);
+      }
+    }, 500);
+
+    return () => {
+      isCancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [emailValue, checkEmailExists, setError, clearErrors]);
+
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     setIsLoading(true);
-    
+
+    try {
+      const emailExists = await checkEmailExists(data.email);
+
+      if (emailExists) {
+        setError("email", {
+          type: "manual",
+          message: "이미 가입된 이메일입니다.",
+        });
+        setIsLoading(false);
+        return;
+      }
+    } catch {
+      setToastMessage("이메일 중복 확인 중 문제가 발생했습니다.");
+      setIsLoading(false);
+      return;
+    }
+
+    clearErrors("email");
+
     const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
@@ -43,28 +123,35 @@ export default function SignupPage() {
     setIsLoading(false);
 
     if (error) {
-      alert(`회원가입 실패... ❌ \n에러 내용: ${error.message}`);
+      setToastMessage(`회원가입 실패... ${error.message}`);
     } else {
-      alert("회원가입 요청 성공! 🎉 \n이메일 인증 링크가 발송되었습니다. (인프라 설정에 따라 바로 로그인될 수도 있어요!)");
+      setToastMessage("회원가입 요청 성공 🎉 이메일 인증 링크가 발송되었습니다.");
       console.log("가입 성공 데이터:", signUpData);
+      window.setTimeout(() => {
+        router.push("/login");
+      }, 1200);
     }
   };
-
-  const passwordValue = watch("password");
 
   //구글 로그인 버튼
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/main`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-    if (error) alert(`구글 로그인 실패: ${error.message}`);
+    if (error) setToastMessage(`구글 로그인 실패: ${error.message}`);
   }
 
   return (
     <div className="flex flex-col w-full font-roboto text-black justify-center gap-10">
+      {toastMessage && (
+        <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+          <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+        </div>
+      )}
+
       {/* 타이틀 */}
       <div className="flex flex-col items-start gap-1">
         <h1 className="text-subtitle-lg font-bold">회원가입</h1>
@@ -141,10 +228,10 @@ export default function SignupPage() {
           type="submit"
           variant="primary"
           sizeVariant="lg"
-          disabled={isLoading}
-          isActive={isValid}
+          disabled={isLoading || isCheckingEmail || !isValid}
+          isActive={isValid && !isCheckingEmail}
         >
-          회원가입
+          {isCheckingEmail ? "이메일 확인 중..." : "회원가입"}
         </Button>
       </form>
 

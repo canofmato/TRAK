@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import Button from "@/components/common/Button";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import Toast from "@/components/common/Toast";
 
 interface LoginFormValues {
   email: string;
@@ -16,35 +17,34 @@ interface LoginFormValues {
 export default function LoginPage() {
   //로그인 진행 중
     const [isLoading, setIsLoading] = useState(false);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     const {
       register,
       handleSubmit,
-      watch,
-      formState: { errors},
+      formState: { errors, isValid},
     } = useForm<LoginFormValues>({
       mode: "onChange",
     });
 
-    // 두 필드 모두 입력됐는지 감지
-    const watchedFields = watch(["email", "password"]);
-    const isComplete = watchedFields.every((v) => v && v.trim() !== "");
     const router = useRouter();
     
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
         setIsLoading(true);
         
-        const { data: loginData, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email: data.email,
           password: data.password,
         });
         setIsLoading(false);
     
         if (error) {
-          alert(`로그인실패... ❌ \n에러 내용: ${error.message}`);
+          setToastMessage(`로그인 실패... ${error.message}`);
         } else {
-          alert("로그인 성공! 🎉 \n환영합니다!");
-          router.push("/main");
+          setToastMessage("로그인 성공 🎉 환영합니다!");
+          window.setTimeout(() => {
+            router.push("/main");
+          }, 1000);
         }
       };
 
@@ -53,14 +53,20 @@ export default function LoginPage() {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            redirectTo: `${window.location.origin}/test`,
+            redirectTo: `${window.location.origin}/auth/callback`,
           },
         });
-        if (error) alert(`구글 로그인 실패: ${error.message}`);
+        if (error) setToastMessage(`구글 로그인 실패: ${error.message}`);
       }
 
     return (
       <div className="flex flex-col w-full font-roboto text-black justify-center gap-10">
+            {toastMessage && (
+              <div className="fixed left-1/2 top-8 z-50 -translate-x-1/2">
+                <Toast onClose={() => setToastMessage(null)}>{toastMessage}</Toast>
+              </div>
+            )}
+
             {/* 타이틀 */}
             <div className="flex flex-col items-start gap-1">
               <h1 className="text-subtitle-lg font-bold">로그인</h1>
@@ -116,8 +122,8 @@ export default function LoginPage() {
                 type="submit"
                 variant="primary"
                 sizeVariant="lg"
-                disabled={isLoading}
-                isActive={isComplete}
+                disabled={isLoading || !isValid}
+                isActive={isValid}
               >
                 로그인
               </Button>
