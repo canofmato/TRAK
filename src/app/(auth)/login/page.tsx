@@ -28,18 +28,65 @@ export default function LoginPage() {
     });
 
     const router = useRouter();
+
+    const checkEmailExists = async (email: string) => {
+      const { data, error } = await supabase.functions.invoke<{
+        exists: boolean;
+      }>("check-email-exists", {
+        body: { email },
+      });
+
+      if (error) throw error;
+
+      return data?.exists ?? false;
+    };
+
+    const getLoginErrorMessage = (message: string) => {
+      const normalizedMessage = message.toLowerCase();
+
+      if (normalizedMessage.includes("email not confirmed")) {
+        return "이메일 인증이 아직 완료되지 않았어요. 메일함에서 인증 링크를 확인해주세요.";
+      }
+
+      if (
+        normalizedMessage.includes("invalid login credentials") ||
+        normalizedMessage.includes("invalid credentials")
+      ) {
+        return "비밀번호가 올바르지 않아요. 다시 확인해주세요.";
+      }
+
+      if (normalizedMessage.includes("too many requests")) {
+        return "로그인 시도가 너무 많아요. 잠시 후 다시 시도해주세요.";
+      }
+
+      return "로그인 중 문제가 발생했어요. 잠시 후 다시 시도해주세요.";
+    };
     
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
         setIsLoading(true);
+
+        const normalizedEmail = data.email.trim();
+
+        try {
+          const emailExists = await checkEmailExists(normalizedEmail);
+
+          if (!emailExists) {
+            setToastMessage("가입된 이메일이 아니에요. 이메일을 다시 확인해주세요.");
+            setIsLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.error("이메일 가입 여부 확인 실패:", error);
+        }
         
         const { error } = await supabase.auth.signInWithPassword({
-          email: data.email,
+          email: normalizedEmail,
           password: data.password,
         });
         setIsLoading(false);
     
         if (error) {
-          setToastMessage(`로그인 실패... ${error.message}`);
+          setToastMessage(getLoginErrorMessage(error.message));
         } else {
           setToastMessage("로그인 성공 🎉 환영합니다!");
           window.setTimeout(() => {
@@ -114,7 +161,7 @@ export default function LoginPage() {
 
               {/* 비밀번호 찾기 */}
               <div className="w-full flex justify-end">
-                <a href="/find" className="text-caption text-gray-200">비밀번호를 잊으셨나요?</a>
+                <a href="/find" className="text-caption text-gray-200 hover:text-gray-400">비밀번호를 잊으셨나요?</a>
               </div>
       
               {/* 로그인 버튼 */}

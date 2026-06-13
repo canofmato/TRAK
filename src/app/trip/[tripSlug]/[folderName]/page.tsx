@@ -144,6 +144,14 @@ export default function FolderPage() {
           style={{ backgroundColor: trip.color || '#D7E8F8' }}
         >
           <div className="w-full flex flex-col items-start gap-5 p-4 border border-2 border-dashed border-dark bg-white">
+            <Link
+              href={`/trip/${tripSlug}`}
+              className="inline-flex items-center gap-1 text-base font-semibold text-gray-300 hover:text-black transition-colors"
+              aria-label={`${trip.title} 여행 페이지로 돌아가기`}
+            >
+              <ChevronLeft size={18} strokeWidth={3} aria-hidden="true" />
+              <span>{trip.title}로 돌아가기</span>
+            </Link>
 
             {/* 상단 */}
             <div className="w-full flex items-center justify-between">

@@ -24,7 +24,7 @@ export default function Toast({
       aria-live="polite"
       className={twMerge(
         clsx(
-          "relative flex min-h-[56px] w-[min(420px,calc(100vw-32px))] items-center justify-center",
+          "relative flex min-h-[56px] w-fit min-w-[280px] max-w-[calc(100vw-32px)] items-center justify-center",
           "rounded-[10px] bg-primary px-14 py-[14px]",
           "text-center text-body font-regular text-black",
         ),
@@ -32,7 +32,7 @@ export default function Toast({
       )}
       {...rest}
     >
-      <p className="min-w-0 break-words font-noto font-bold eading-normal">{children}</p>
+      <p className="min-w-0 break-keep font-noto font-bold leading-normal lg:whitespace-nowrap">{children}</p>
 
       {showClose && (
         <button
