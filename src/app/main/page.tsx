@@ -1,11 +1,49 @@
+"use client";
+
 import Button from "@/components/common/Button";
 import { TabBar } from "@/components/layout/TabBar";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import Link from "next/link";
 import { MousePointer } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import Loading from "@/components/common/Loading";
 
 export default function MainPage() {
+  const router = useRouter();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!isMounted) return;
+
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+
+      setIsCheckingAuth(false);
+    };
+
+    checkUser();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router]);
+
+  if (isCheckingAuth) {
+    return <Loading />;
+  }
+
   return (
     <div className="w-full min-h-full flex flex-col items-center justify-center">
       <Header />
