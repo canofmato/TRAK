@@ -114,7 +114,7 @@ export default function LoginPage() {
 
               {/* 비밀번호 찾기 */}
               <div className="w-full flex justify-end">
-                <a href="/find" className="text-caption text-gray-200">비밀번호를 잊으셨나요?</a>
+                <a href="/find" className="text-caption text-gray-200 hover:text-gray-400">비밀번호를 잊으셨나요?</a>
               </div>
       
               {/* 로그인 버튼 */}
